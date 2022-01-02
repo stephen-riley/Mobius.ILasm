@@ -1,38 +1,57 @@
 name: Release
 
-on: 
-  push:
-    tags:
-      - '*'
+on:
+    push:
+        tags:
+            - "*"
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore -c Release
-    - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release
-    - name: Pack
-      run: dotnet pack --no-build --output . --configuration Release
-    - name: Push NuGets
-      run: dotnet nuget push -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} *.nupkg
-    - name: Publish - Windows
-      if: github.ref == 'refs/heads/main'
-      run: dotnet publish -c release -r win-x64 -f net5.0 -p:PublishSingleFile=true --self-contained false -p:IncludeAllContentForSelfExtract=true
-      working-directory: ./Mobius.ILasm.Cli
-    - name: Upload
-      if: github.ref == 'refs/heads/main'
-      uses: actions/upload-artifact@main
-      with:
-        name: mobius-ilasm-win-x64
-        path: ./Mobius.ILasm.Cli/bin/release/net5.0/win-x64/publish
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: 5.0.x
+            - name: Restore dependencies
+              run: dotnet restore
+            - name: Build
+              run: dotnet build --no-restore -c Release
+            - name: Test
+              run: dotnet test --no-build --verbosity normal -c Release
+            - name: Pack
+              run: dotnet pack --no-build --output . --configuration Release
+            - name: Push NuGets
+              run: dotnet nuget push -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} *.nupkg
+            - name: Publish - Windows
+              if: github.ref == 'refs/heads/main'
+              run: dotnet publish -c release -r win-x64 -f net5.0 -p:PublishSingleFile=true --self-contained false -p:IncludeAllContentForSelfExtract=true
+              working-directory: ./Mobius.ILasm.Cli
+            - name: Upload - Windows
+              if: github.ref == 'refs/heads/main'
+              uses: actions/upload-artifact@main
+              with:
+                  name: mobius-ilasm-win-x64
+                  path: ./Mobius.ILasm.Cli/bin/release/net5.0/win-x64/publish
+            - name: Publish - Mac
+              if: github.ref == 'refs/heads/main'
+              run: dotnet publish -c release -r osx-x64 -f net5.0 -p:PublishSingleFile=true --self-contained false -p:IncludeAllContentForSelfExtract=true
+              working-directory: ./Mobius.ILasm.Cli
+            - name: Upload - Mac
+              if: github.ref == 'refs/heads/main'
+              uses: actions/upload-artifact@main
+              with:
+                  name: mobius-ilasm-osx-x64
+                  path: ./Mobius.ILasm.Cli/bin/release/net5.0/osx-x64/publish
+            - name: Publish - Linux
+              if: github.ref == 'refs/heads/main'
+              run: dotnet publish -c release -r linux-x64 -f net5.0 -p:PublishSingleFile=true --self-contained false -p:IncludeAllContentForSelfExtract=true
+              working-directory: ./Mobius.ILasm.Cli
+            - name: Upload - Linux
+              if: github.ref == 'refs/heads/main'
+              uses: actions/upload-artifact@main
+              with:
+                  name: mobius-ilasm-linux-x64
+                  path: ./Mobius.ILasm.Cli/bin/release/net5.0/linux-x64/publish
