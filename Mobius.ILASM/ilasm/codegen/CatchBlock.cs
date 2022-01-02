@@ -8,14 +8,13 @@
 //
 
 
-using System;
 
 
 namespace Mono.ILASM {
 
         public class CatchBlock : ISehClause {
 
-                private BaseTypeRef type_ref;
+                readonly private BaseTypeRef type_ref;
                 private HandlerBlock handler_block;
 
                 public CatchBlock (BaseTypeRef type_ref)

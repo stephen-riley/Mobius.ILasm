@@ -12,11 +12,9 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security;
 
 using Mono.CompilerServices.SymbolWriter;
 using Mobius.ILasm.interfaces;
-using Mobius.ILasm.infrastructure;
 
 namespace Mono.ILASM
 {
@@ -26,25 +24,25 @@ namespace Mono.ILASM
 
         private PEAPI.MethAttr meth_attr;
         private PEAPI.CallConv call_conv;
-        private PEAPI.ImplAttr impl_attr;
-        private string name;
+        readonly private PEAPI.ImplAttr impl_attr;
+        readonly private string name;
         private string signature;
         private Hashtable vararg_sig_table;
-        private ParamDef ret_param;
-        private ArrayList param_list;
-        private ArrayList inst_list;
+        readonly private ParamDef ret_param;
+        readonly private ArrayList param_list;
+        readonly private ArrayList inst_list;
         private ArrayList customattr_list;
         private DeclSecurity decl_sec;
-        private Hashtable label_table;
-        private Hashtable labelref_table;
-        private ArrayList label_list;
+        readonly private Hashtable label_table;
+        readonly private Hashtable labelref_table;
+        readonly private ArrayList label_list;
         private PEAPI.MethodDef methoddef;
         private bool entry_point;
         private bool zero_init;
         private bool is_resolved;
         private bool is_defined;
-        private ArrayList local_list;
-        private ArrayList named_local_tables;
+        readonly private ArrayList local_list;
+        readonly private ArrayList named_local_tables;
         private int current_scope_depth;
         private bool init_locals;
         private int max_stack;
@@ -52,13 +50,13 @@ namespace Mono.ILASM
         private ExternModule pinvoke_mod;
         private string pinvoke_name;
         private PEAPI.PInvokeAttr pinvoke_attr;
-        private SourceMethod source;
-        private TypeDef type_def;
-        private GenericParameters gen_params;
-        private Location start;
-        private CodeGen codegen;
-        private ILogger logger;
-        private Dictionary<string, string> errors;
+        readonly private SourceMethod source;
+        readonly private TypeDef type_def;
+        readonly private GenericParameters gen_params;
+        readonly private Location start;
+        readonly private CodeGen codegen;
+        readonly private ILogger logger;
+        readonly private Dictionary<string, string> errors;
 
         public MethodDef(CodeGen codegen, PEAPI.MethAttr meth_attr,
           PEAPI.CallConv call_conv, PEAPI.ImplAttr impl_attr,
@@ -83,8 +81,10 @@ namespace Mono.ILASM
             labelref_table = new Hashtable();
             label_list = new ArrayList();
             local_list = new ArrayList();
-            named_local_tables = new ArrayList();
-            named_local_tables.Add(new Hashtable());
+            named_local_tables = new ArrayList
+            {
+                new Hashtable()
+            };
             current_scope_depth = 0;
 
             entry_point = false;
@@ -184,7 +184,7 @@ namespace Mono.ILASM
         {
 
             if (param_list == null)
-                return new BaseTypeRef[0];
+                return Array.Empty<BaseTypeRef>();
             int count = 0;
             BaseTypeRef[] type_list = new BaseTypeRef[param_list.Count];
             foreach (ParamDef param in param_list)
@@ -261,9 +261,7 @@ namespace Mono.ILASM
         public void AddLocals(ArrayList local_list)
         {
             int slot_pos = this.local_list.Count;
-
-            Hashtable current_named_table = null;
-            current_named_table = (Hashtable)named_local_tables[current_scope_depth];
+            Hashtable current_named_table = (Hashtable)named_local_tables[current_scope_depth];
 
             foreach (Local local in local_list)
             {
@@ -403,7 +401,7 @@ namespace Mono.ILASM
 
         public void ResolveGenParams()
         {
-            GenericParameters type_params = (type_def != null) ? type_def.TypeParameters : null;
+            GenericParameters type_params = type_def?.TypeParameters;
 
             if (gen_params == null && type_params == null)
                 return;
@@ -411,8 +409,7 @@ namespace Mono.ILASM
             if (gen_params != null)
                 gen_params.ResolveConstraints(type_params, gen_params);
 
-            BaseGenericTypeRef gtr = RetType as BaseGenericTypeRef;
-            if (gtr != null)
+            if (RetType is BaseGenericTypeRef gtr)
                 gtr.Resolve(type_params, gen_params);
 
             if (param_list == null)
@@ -479,7 +476,7 @@ namespace Mono.ILASM
             }
             else
             {
-                param_array = new PEAPI.Param[0];
+                param_array = Array.Empty<PEAPI.Param>();
             }
 
             return param_array;
@@ -537,7 +534,7 @@ namespace Mono.ILASM
 
         protected void WriteCode(CodeGen code_gen, PEAPI.MethodDef methoddef)
         {
-            /// Add the custrom attributes to this method
+            // Add the custrom attributes to this method
             if (customattr_list != null)
                 foreach (CustomAttr customattr in customattr_list)
                 {
@@ -546,7 +543,7 @@ namespace Mono.ILASM
                         methoddef.AddMethAttribute(PEAPI.MethAttr.HasSecurity);
                 }
 
-            /// Add declarative security to this method
+            // Add declarative security to this method
             if (decl_sec != null)
             {
                 decl_sec.AddTo(code_gen, methoddef);
@@ -602,9 +599,9 @@ namespace Mono.ILASM
                 methoddef.AddLocals(local_array, init_locals);
             }
 
-            /// Nothing seems to work if maxstack is not set,
-            /// i need to find out if this NEEDs to be set
-            /// and what its default value should be
+            // Nothing seems to work if maxstack is not set,
+            // i need to find out if this NEEDs to be set
+            // and what its default value should be
             if (max_stack < 0)
                 max_stack = 8;
             methoddef.SetMaxStack(max_stack);
@@ -612,7 +609,7 @@ namespace Mono.ILASM
             if (pinvoke_info)
             {
                 methoddef.AddPInvokeInfo(pinvoke_mod.ModuleRef,
-                                (pinvoke_name != null ? pinvoke_name : name), pinvoke_attr);
+                                (pinvoke_name ?? name), pinvoke_attr);
             }
 
             if ((impl_attr & PEAPI.ImplAttr.Runtime) == PEAPI.ImplAttr.Runtime)
@@ -669,9 +666,9 @@ namespace Mono.ILASM
             }
 
             PEAPI.CILInstructions cil = methoddef.CreateCodeBuffer();
-            /// Create all the labels
-            /// TODO: Most labels don't actually need to be created so we could
-            /// probably only create the ones that need to be
+            // Create all the labels
+            // TODO: Most labels don't actually need to be created so we could
+            // probably only create the ones that need to be
             LabelInfo[] label_info = new LabelInfo[label_table.Count + label_list.Count];
             label_table.Values.CopyTo(label_info, 0);
             label_list.CopyTo(label_info, label_table.Count);
@@ -689,7 +686,7 @@ namespace Mono.ILASM
                 if (label.Pos == previous_pos)
                     label.Label = previous_label.Label;
                 else
-                    label.Define(cil.NewLabel());
+                    label.Define(PEAPI.CILInstructions.NewLabel());
 
                 previous_label = label;
                 previous_pos = label.Pos;
@@ -813,7 +810,7 @@ namespace Mono.ILASM
                 builder.Append("instance ");
 
             builder.Append(RetType.FullName);
-            builder.Append(" ");
+            builder.Append(' ');
             builder.Append(name);
             if (gen_param_count > 0)
                 builder.AppendFormat("`{0}", gen_param_count);
@@ -841,7 +838,7 @@ namespace Mono.ILASM
             ParamDef last = null;
 
             builder.Append(RetType.FullName);
-            builder.Append(" ");
+            builder.Append(' ');
             builder.Append(name);
             builder.Append('(');
 
@@ -889,7 +886,7 @@ namespace Mono.ILASM
             BaseTypeRef last = null;
 
             builder.Append(RetType.FullName);
-            builder.Append(" ");
+            builder.Append(' ');
             builder.Append(name);
             builder.Append('(');
 
@@ -909,7 +906,7 @@ namespace Mono.ILASM
 
             }
 
-            if (!include_optional && (last == null || !(last is SentinelTypeRef)))
+            if (!include_optional && (last == null || last is not SentinelTypeRef))
             {
                 if (!first)
                     builder.Append(',');
@@ -930,7 +927,7 @@ namespace Mono.ILASM
 
 
             builder.Append(RetType.FullName);
-            builder.Append(" ");
+            builder.Append(' ');
             builder.Append(name);
             if (gen_param_count > 0)
                 builder.AppendFormat("`{0}", gen_param_count);

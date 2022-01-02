@@ -8,15 +8,14 @@
 //
 
 
-using System;
 using System.Collections;
 
 namespace Mono.ILASM {
 
         public class TryBlock : IInstr {
 
-                private HandlerBlock block;
-                private ArrayList clause_list;
+                readonly private HandlerBlock block;
+                readonly private ArrayList clause_list;
 
                 public TryBlock (HandlerBlock block, Location loc)
 			: base (loc)

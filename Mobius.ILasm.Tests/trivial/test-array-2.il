@@ -25,7 +25,7 @@
     }
 
     .method public static  hidebysig 
-           default void Main ()  cil managed 
+           default void Main (string[] args)  cil managed 
     {
 	.entrypoint
 	.maxstack 3

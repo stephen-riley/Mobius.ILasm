@@ -8,14 +8,13 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
         public class TypeInstr : IInstr {
 
-                private PEAPI.TypeOp op;
-                private BaseTypeRef operand;
+                readonly private PEAPI.TypeOp op;
+                readonly private BaseTypeRef operand;
 
                 public TypeInstr (PEAPI.TypeOp op, BaseTypeRef operand, Location loc)
 			: base (loc)

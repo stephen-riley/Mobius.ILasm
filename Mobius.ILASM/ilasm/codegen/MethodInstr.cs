@@ -8,15 +8,14 @@
 //
 
 
-using System;
 
 
 namespace Mono.ILASM {
 
         public class MethodInstr : IInstr {
 
-                private PEAPI.MethodOp op;
-                private BaseMethodRef operand;
+                readonly private PEAPI.MethodOp op;
+                readonly private BaseMethodRef operand;
 
                 public MethodInstr (PEAPI.MethodOp op, BaseMethodRef operand, Location loc)
 			: base (loc)

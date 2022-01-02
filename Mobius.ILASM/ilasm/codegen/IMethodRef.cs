@@ -8,7 +8,6 @@
 //
 
 
-using System;
 
 
 namespace Mono.ILASM {

@@ -16,7 +16,7 @@
 
 	.class public auto ansi Test_2 extends [mscorlib]System.Object {
 	
-		.method public static void main () cil managed {
+		.method public static void Main (string[] args) cil managed {
 			.entrypoint
 			.maxstack 1	
 			.locals init (object obj)

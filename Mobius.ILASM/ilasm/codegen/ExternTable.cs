@@ -11,11 +11,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Security;
 using System.Globalization;
 using PEAPI;
 using Mobius.ILasm.interfaces;
-using Mobius.ILasm.infrastructure;
 
 namespace Mono.ILASM
 {
@@ -23,23 +21,22 @@ namespace Mono.ILASM
     public interface IScope
     {
         ExternTypeRef GetTypeRef(string full_name, bool is_valuetype);
-        PEAPI.ClassRef GetType(string full_name, bool is_valuetype);
+        ClassRef GetType(string full_name, bool is_valuetype);
         string FullName { get; }
     }
 
     public abstract class ExternRef : ICustomAttrTarget, IScope
     {
-
         protected string name;
         protected Hashtable class_table;
         protected Hashtable typeref_table;
         protected ArrayList customattr_list;
         protected bool is_resolved;
-        private ILogger logger;
-        private Dictionary<string, string> errors;
+        private readonly ILogger logger;
+        private readonly Dictionary<string, string> errors;
 
         public abstract void Resolve(CodeGen codegen);
-        public abstract PEAPI.IExternRef GetExternRef();
+        public abstract IExternRef GetExternRef();
 
         public ExternRef(string name, ILogger logger, Dictionary<string, string> errors)
         {
@@ -79,9 +76,8 @@ namespace Mono.ILASM
                 rest = full_name.Substring(slash + 1);
             }
 
-            ExternTypeRef type_ref = typeref_table[first] as ExternTypeRef;
 
-            if (type_ref != null)
+            if (typeref_table[first] is ExternTypeRef type_ref)
             {
                 if (is_valuetype && rest == "")
                     type_ref.MakeValueClass();
@@ -95,20 +91,17 @@ namespace Mono.ILASM
             return (rest == "" ? type_ref : type_ref.GetTypeRef(rest, is_valuetype));
         }
 
-        public PEAPI.ClassRef GetType(string full_name, bool is_valuetype)
+        public ClassRef GetType(string full_name, bool is_valuetype)
         {
-            PEAPI.ClassRef klass = class_table[full_name] as PEAPI.ClassRef;
-
-            if (klass != null)
+            if (class_table[full_name] is ClassRef klass)
                 return klass;
 
-            string name_space, name;
-            ExternTable.GetNameAndNamespace(full_name, out name_space, out name);
+            ExternTable.GetNameAndNamespace(full_name, out string name_space, out string name);
 
             if (is_valuetype)
-                klass = (PEAPI.ClassRef)GetExternRef().AddValueClass(name_space, name);
+                klass = GetExternRef().AddValueClass(name_space, name);
             else
-                klass = (PEAPI.ClassRef)GetExternRef().AddClass(name_space, name);
+                klass = GetExternRef().AddClass(name_space, name);
 
             class_table[full_name] = klass;
             return klass;
@@ -119,7 +112,7 @@ namespace Mono.ILASM
     public class ExternModule : ExternRef
     {
 
-        public PEAPI.ModuleRef ModuleRef;
+        public ModuleRef ModuleRef;
 
         public ExternModule(string name, ILogger logger, Dictionary<string, string> errors) : base(name, logger, errors)
         {
@@ -149,7 +142,7 @@ namespace Mono.ILASM
         }
 
 
-        public override PEAPI.IExternRef GetExternRef()
+        public override IExternRef GetExternRef()
         {
             return ModuleRef;
         }
@@ -158,7 +151,7 @@ namespace Mono.ILASM
     public class ExternAssembly : ExternRef, IDeclSecurityTarget
     {
 
-        public PEAPI.AssemblyRef AssemblyRef;
+        public AssemblyRef AssemblyRef;
 
         private int major, minor, build, revision;
         private byte[] public_key;
@@ -166,11 +159,11 @@ namespace Mono.ILASM
         private string locale;
         private byte[] hash;
         private DeclSecurity decl_sec;
-        private AssemblyName asmb_name;
+        private readonly AssemblyName asmb_name;
         //flags
-        private PEAPI.AssemAttr attr;
+        private readonly AssemAttr attr;
 
-        public ExternAssembly(string name, AssemblyName asmb_name, PEAPI.AssemAttr attr, ILogger logger, Dictionary<string, string> errors) : base(name, logger, errors)
+        public ExternAssembly(string name, AssemblyName asmb_name, AssemAttr attr, ILogger logger, Dictionary<string, string> errors) : base(name, logger, errors)
         {
             this.name = name;
             this.asmb_name = asmb_name;
@@ -233,7 +226,7 @@ namespace Mono.ILASM
             is_resolved = true;
         }
 
-        public override PEAPI.IExternRef GetExternRef()
+        public override IExternRef GetExternRef()
         {
             return AssemblyRef;
         }
@@ -275,9 +268,9 @@ namespace Mono.ILASM
 
     public class ExternClass
     {
-        string fullName;
-        TypeAttr ta;
-        string assemblyReference;
+        readonly string fullName;
+        readonly TypeAttr ta;
+        readonly string assemblyReference;
 
         public ExternClass(string fullName, TypeAttr ta, string assemblyReference)
         {
@@ -315,13 +308,13 @@ namespace Mono.ILASM
         List<ExternClass> class_table;
 
         bool is_resolved;
-        ILogger logger;
-        private Dictionary<string, string> errors;
+        readonly ILogger logger;
+        private readonly Dictionary<string, string> errors;
 
         public ExternTable(ILogger logger)
         {
             this.logger = logger;
-            this.errors = errors;
+            errors = null;
         }
 
         public void AddCorlib()
@@ -337,10 +330,9 @@ namespace Mono.ILASM
             assembly_table["corlib"] = assembly_table["mscorlib"];
         }
 
-        public ExternAssembly AddAssembly(string name, AssemblyName asmb_name, PEAPI.AssemAttr attr)
+        public ExternAssembly AddAssembly(string name, AssemblyName asmb_name, AssemAttr attr)
         {
-            ExternAssembly ea = null;
-
+            ExternAssembly ea;
             if (assembly_table == null)
             {
                 assembly_table = new Hashtable();
@@ -361,8 +353,7 @@ namespace Mono.ILASM
 
         public ExternModule AddModule(string name)
         {
-            ExternModule em = null;
-
+            ExternModule em;
             if (module_table == null)
             {
                 module_table = new Hashtable();
@@ -424,7 +415,7 @@ namespace Mono.ILASM
 
             if (ext_asmb == null)
             {
-                System.Reflection.AssemblyName asmname = new System.Reflection.AssemblyName();
+                AssemblyName asmname = new AssemblyName();
                 asmname.Name = asmb_name;
 
                 logger.Warning(String.Format("Reference to undeclared extern assembly '{0}', adding.", asmb_name));

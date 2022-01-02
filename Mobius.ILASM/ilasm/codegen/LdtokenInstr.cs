@@ -8,15 +8,14 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
         public class LdtokenInstr : IInstr {
 
-                private IFieldRef field_ref;
-                private BaseMethodRef method_ref;
-                private BaseTypeRef type_ref;
+                readonly private IFieldRef field_ref;
+                readonly private BaseMethodRef method_ref;
+                readonly private BaseTypeRef type_ref;
 
                 public LdtokenInstr (IFieldRef field_ref, Location loc)
 			: base (loc)

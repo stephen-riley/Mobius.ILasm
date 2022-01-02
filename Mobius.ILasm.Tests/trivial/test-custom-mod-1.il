@@ -59,7 +59,7 @@ managed
         IL_0005:  ret
     } // end of method TestMods::method
 
-        .method private static  hidebysig default void Main ()  cil managed
+        .method private static  hidebysig default void Main (string[] args)  cil managed
         {
                 .entrypoint
                 ret

@@ -3,7 +3,6 @@
 
 #if !MOBILE
 
-using System;
 using System.Reflection.Emit;
 
 namespace Mono.ILASM {

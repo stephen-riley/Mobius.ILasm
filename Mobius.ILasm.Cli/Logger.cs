@@ -1,7 +1,4 @@
 ﻿using Mono.ILASM;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using NLog;
 using NLog.Conditions;
 using NLog.Targets;
@@ -11,12 +8,12 @@ namespace Mobius.ILasm
 {
     public class Logger : ILogger
     {
-        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();        
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Logger()
         {
             var config = new NLog.Config.LoggingConfiguration();
-            var logconsole = new NLog.Targets.ColoredConsoleTarget();
+            var logconsole = new ColoredConsoleTarget();
             logconsole.Layout = "${time} [${pad:padding=5:inner=${level:uppercase=true}}] ${message}";
 
             var highlightRule = new ConsoleRowHighlightingRule();

@@ -13,9 +13,9 @@ namespace Mono.ILASM {
 	/// </summary>
 	public class ILReader {
 		
-		private StreamReader reader;
-		private Stack putback_stack;
-		private Location location;
+		readonly private StreamReader reader;
+		readonly private Stack putback_stack;
+		readonly private Location location;
 		private Location markedLocation;
 		
 		public ILReader (StreamReader reader)

@@ -8,15 +8,14 @@
 //
 
 
-using System;
 
 
 namespace Mono.ILASM {
 
         public class FieldInstr : IInstr {
 
-                private PEAPI.FieldOp op;
-                private IFieldRef operand;
+                readonly private PEAPI.FieldOp op;
+                readonly private IFieldRef operand;
 
                 public FieldInstr (PEAPI.FieldOp op, IFieldRef operand, Location loc)
 			: base (loc)

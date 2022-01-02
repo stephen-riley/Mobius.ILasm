@@ -43,12 +43,10 @@ namespace Mono.ILASM {
 
                 public int CompareTo (object obj)
                 {
-                        LabelInfo other = obj as LabelInfo;
+            if (obj is LabelInfo other)
+                return Pos.CompareTo(other.Pos);
 
-                        if(other != null)
-                                return Pos.CompareTo(other.Pos);
-
-                        throw new InternalErrorException ("object is not a LabelInfo");
+            throw new InternalErrorException ("object is not a LabelInfo");
                 }
 
                 public override string ToString ()

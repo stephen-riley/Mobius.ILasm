@@ -1,8 +1,6 @@
 // StringHelperBase.cs
 // Author: Sergey Chaban (serge@wildwestsoftware.com)
 
-using System;
-using System.Text;
 
 namespace Mono.ILASM {
 

@@ -8,12 +8,9 @@
 //
 
 
-using Mobius.ILasm.infrastructure;
 using Mobius.ILasm.interfaces;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using PEAPI;
 
 namespace Mono.ILASM
 {
@@ -21,10 +18,10 @@ namespace Mono.ILASM
     public class PropertyDef : ICustomAttrTarget
     {
 
-        private FeatureAttr attr;
-        private string name;
-        private BaseTypeRef type;
-        private ArrayList arg_list;
+        readonly private FeatureAttr attr;
+        readonly private string name;
+        readonly private BaseTypeRef type;
+        readonly private ArrayList arg_list;
         private PEAPI.Property prop_def;
         private bool is_resolved;
         private ArrayList customattr_list;
@@ -33,8 +30,8 @@ namespace Mono.ILASM
         private MethodRef _set;
         private ArrayList other_list;
         private PEAPI.Constant init_value;
-        private ILogger logger;
-        private Dictionary<string, string> errors;
+        readonly private ILogger logger;
+        readonly private Dictionary<string, string> errors;
 
         public PropertyDef(FeatureAttr attr, BaseTypeRef type, string name, ArrayList arg_list, ILogger logger, Dictionary<string, string> errors)
         {

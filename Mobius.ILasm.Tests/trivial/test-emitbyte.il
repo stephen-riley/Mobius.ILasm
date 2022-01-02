@@ -18,7 +18,7 @@ the program should return 1 on sucess
         extends [mscorlib]System.Object
 {
 
-        .method public static int32 Main ()
+        .method public static int32 Main (string[] args)
         {
                 .entrypoint
                 .maxstack 2

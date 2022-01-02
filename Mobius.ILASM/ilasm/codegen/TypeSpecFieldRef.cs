@@ -8,16 +8,15 @@
 //
 
 
-using System;
 
 
 namespace Mono.ILASM {
 
         public class TypeSpecFieldRef : IFieldRef {
 
-                private BaseTypeRef owner;
-                private BaseTypeRef type;
-                private string name;
+                readonly private BaseTypeRef owner;
+                readonly private BaseTypeRef type;
+                readonly private string name;
 
                 private PEAPI.FieldRef peapi_field;
 		private bool is_resolved;

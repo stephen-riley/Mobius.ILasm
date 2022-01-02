@@ -20,7 +20,7 @@
                 ret
         }
 
-        .method public static void Main ()
+        .method public static void Main (string[] args)
         {
                 .entrypoint
 

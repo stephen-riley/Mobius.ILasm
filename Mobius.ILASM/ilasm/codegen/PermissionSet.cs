@@ -32,8 +32,8 @@ namespace Mono.ILASM {
 
         public class PermissionSet
         {
-                PEAPI.SecurityAction sec_action;
-                ArrayList permissions;
+                readonly PEAPI.SecurityAction sec_action;
+                readonly ArrayList permissions;
                 PEAPI.PermissionSet ps;
 
                 public PermissionSet (PEAPI.SecurityAction sec_action, ArrayList permissions)

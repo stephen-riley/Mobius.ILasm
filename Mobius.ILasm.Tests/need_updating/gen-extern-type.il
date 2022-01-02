@@ -29,7 +29,7 @@
     IL_0006:  ret
   }
 
-  .method public hidebysig static void  Main() cil managed
+  .method public hidebysig static void  Main(string[] args) cil managed
   {
     .entrypoint
     .maxstack  3

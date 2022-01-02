@@ -31,7 +31,7 @@
                 ret
         }
 
-        .method public static int32 Main ()
+        .method public static int32 Main (string[] args)
         {
                 .entrypoint
 

@@ -1,14 +1,12 @@
 ﻿using Mono.ILASM;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mobius.ILasm.infrastructure
 {
     public class ILAsmException : Exception
     {
 
-        string message;
+        readonly string message;
         string file_path;
         Location location;
 
@@ -53,7 +51,7 @@ namespace Mobius.ILasm.infrastructure
                 location_str = " (" + location.line + ", " + location.column + ") : ";
 
             return String.Format("{0}{1}Error : {2}",
-                    (file_path != null ? file_path : ""), location_str, message);
+                    (file_path ?? ""), location_str, message);
         }
 
     }

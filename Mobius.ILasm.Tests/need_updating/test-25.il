@@ -12,7 +12,7 @@
 
            .class public Test_25  {
 
-                .method public static void Main ()
+                .method public static void Main (string[] args)
                 {
 
                         .entrypoint

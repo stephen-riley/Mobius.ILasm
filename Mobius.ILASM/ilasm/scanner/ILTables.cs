@@ -3,9 +3,7 @@
 //
 // (C) Sergey Chaban (serge@wildwestsoftware.com)
 
-using System;
 using System.Collections;
-using System.Reflection.Emit;
 
 namespace Mono.ILASM {
 

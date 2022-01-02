@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Loader;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mobius.ILasm.Core;
-using Xunit;
 
 namespace Mobius.ILasm.Tests
 {
+    [TestClass]
     public class UsageTests
     {
-        [Fact]
+        [TestMethod]
         public void AssembleLoadIntoAssemblyLoadContextAndExecute()
         {
             var logger = new Logger();
@@ -20,15 +17,15 @@ namespace Mobius.ILasm.Tests
             var cil = File.ReadAllText(@"./trivial/helloworldconsole.il");
             using var memoryStream = new MemoryStream();
 
-            driver.Assemble(new [] { cil }, memoryStream);
+            driver.Assemble(new[] { cil }, memoryStream);
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             var assemblyContext = new AssemblyLoadContext(null);
             var assembly = assemblyContext.LoadFromStream(memoryStream);
             var entryPoint = assembly.EntryPoint;
-            var result = entryPoint?.Invoke(null, new object[] { new string[] { } });
+            var result = entryPoint?.Invoke(null, new object[] { Array.Empty<string>() });
 
-            Assert.Equal(44, result);
+            Assert.AreEqual(44, result);
         }
     }
 }

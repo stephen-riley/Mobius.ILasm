@@ -20,7 +20,7 @@
 
         .field private static int32 some_field at some_data
 
-        .method public static int32 main ()
+        .method public static int32 Main (string[] args)
         {
                 .entrypoint
 

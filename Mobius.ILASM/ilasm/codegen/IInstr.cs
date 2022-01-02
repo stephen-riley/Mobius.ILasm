@@ -8,27 +8,28 @@
 //
 
 
-using System;
 
-namespace Mono.ILASM {
+namespace Mono.ILASM
+{
 
-        public abstract class IInstr {
+    public abstract class IInstr
+    {
 
-		public readonly Location Location;
+        public readonly Location Location;
 
-		/// <summary>
-		/// </summary>
-		/// <param name="opcode"></param>
-		public IInstr (Location loc)
-		{
-			this.Location = (Location) loc.Clone ();
-		}
-
-                /// <summary>
-                ///  Add this instruction to the supplied codebuffer
-                /// </summary>
-                public abstract void Emit (CodeGen code_gen, MethodDef meth, 
-					   PEAPI.CILInstructions cil);
+        /// <summary>
+        /// </summary>
+        /// <param name="loc"></param>
+        public IInstr(Location loc)
+        {
+            this.Location = (Location)loc.Clone();
         }
+
+        /// <summary>
+        ///  Add this instruction to the supplied codebuffer
+        /// </summary>
+        public abstract void Emit(CodeGen code_gen, MethodDef meth,
+               PEAPI.CILInstructions cil);
+    }
 
 }

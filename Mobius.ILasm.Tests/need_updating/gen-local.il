@@ -1,4 +1,5 @@
-// Test for generic valuetypes
+// No entry in the TypeSpec table should be emitted for generic types (g<> and gen<>)
+// referenced in local var sig as it(GenericInst) is emitted the sig itself, and not a TypeSpec token
 
 .assembly extern mscorlib
 {
@@ -6,9 +7,9 @@
 }
 .assembly extern one
 {
-  .ver 0:0:0:0
 }
-.assembly 'gen-struct'
+
+.assembly 'gen-local'
 {
   .custom instance void class [mscorlib]System.Runtime.CompilerServices.RuntimeCompatibilityAttribute::.ctor() =  (
 		01 00 01 00 54 02 16 57 72 61 70 4E 6F 6E 45 78   // ....T..WrapNonEx
@@ -16,12 +17,11 @@
 
   .ver  0:0:0:0
 }
-.module 'gen-struct.exe'
+.module 'gen-local.exe'
 
-  .class private auto ansi beforefieldinit test
+  .class private auto ansi beforefieldinit g`1<T>
   	extends [mscorlib]System.Object
   {
-
     .method public hidebysig  specialname  rtspecialname 
            instance default void .ctor ()  cil managed 
     {
@@ -30,18 +30,20 @@
 	IL_0001:  call instance void object::.ctor()
 	IL_0006:  ret 
     }
+  }
 
+  .class private auto ansi beforefieldinit test
+  	extends [mscorlib]System.Object
+  {
     .method public static  hidebysig 
-           default void Main ()  cil managed 
+           default void Main (string[] args)  cil managed 
     {
 	.entrypoint
-	.maxstack 1
+	.maxstack 3
 	.locals init (
-		valuetype [one]gen_struct`1<string>	V_0)
-	IL_0000:  ldloca.s 0
-	IL_0002:  initobj valuetype [one]gen_struct`1<string>
-	IL_0008:  call void valuetype [one]gen_struct`1<int32>::foo()
-	IL_000d:  ret 
+		class g`1<string> V_0,
+		class [one]gen`1<string> V_1)
+	IL_0010:  ret 
     }
 
   }

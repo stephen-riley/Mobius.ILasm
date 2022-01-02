@@ -1,13 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
-using Mobius.ILasm.infrastructure;
 using Mobius.ILasm.interfaces;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mobius.ILasm.Core.BenchmarkDotNet
 {

@@ -15,7 +15,6 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Text;
 using System.Security;
 
@@ -24,7 +23,6 @@ using MIPermissionSet = Mono.ILASM.PermissionSet;
 
 using MIAssembly = Mono.ILASM.Assembly;
 using Mobius.ILasm.interfaces;
-using Mobius.ILasm.infrastructure;
 
 namespace Mono.ILASM
 {
@@ -38,39 +36,39 @@ namespace Mono.ILASM
         private string current_namespace;
         private TypeDef current_typedef;
         private MethodDef current_methoddef;
-        private ArrayList typedef_stack;
+        readonly private ArrayList typedef_stack;
         private int typedef_stack_top;
-        private SymbolWriter symwriter;
+        readonly private SymbolWriter symwriter;
         private ICustomAttrTarget current_customattrtarget;
         private IDeclSecurityTarget current_declsectarget;
-        private PEAPI.NativeType current_field_native_type;
-        private ILogger logger;
+        private NativeType current_field_native_type;
+        readonly private ILogger logger;
 
         private MIAssembly this_assembly;
 
-        private TypeManager type_manager;
-        private ExternTable extern_table;
-        private Hashtable global_field_table;
-        private Hashtable global_method_table;
+        readonly private TypeManager type_manager;
+        readonly private ExternTable extern_table;
+        readonly private Hashtable global_field_table;
+        readonly private Hashtable global_method_table;
         private Hashtable global_methodref_table;
         private Hashtable global_fieldref_table;
-        private Hashtable data_table;
+        readonly private Hashtable data_table;
         private FileRef file_ref;
         private ArrayList manifestResources;
         private Hashtable typeref_table;
-        private MemoryStream stream;
-        private ArrayList defcont_list;
-        private Dictionary<string, string> errors;
+        readonly private MemoryStream stream;
+        readonly private ArrayList defcont_list;
+        readonly private Dictionary<string, string> errors;
 
         private int sub_system;
         private int cor_flags;
         private long image_base;
         private long stack_reserve;
 
-        private string output_file;
-        private bool is_dll;
+        readonly private string output_file;
+        readonly private bool is_dll;
         private bool entry_point;
-        bool noautoinherit;
+        readonly bool noautoinherit;
 
         private Module this_module;
 
@@ -195,7 +193,7 @@ namespace Mono.ILASM
             return tr;
         }
 
-        public GlobalMethodRef GetGlobalMethodRef(BaseTypeRef ret_type, PEAPI.CallConv call_conv,
+        public GlobalMethodRef GetGlobalMethodRef(BaseTypeRef ret_type, CallConv call_conv,
                         string name, BaseTypeRef[] param, int gen_param_count)
         {
             string key = MethodDef.CreateSignature(ret_type, call_conv, name, param, gen_param_count, true);
@@ -256,14 +254,14 @@ namespace Mono.ILASM
             this.stack_reserve = stack_reserve;
         }
 
-        public void SetThisAssembly(string name, PEAPI.AssemAttr attr)
+        public void SetThisAssembly(string name, AssemAttr attr)
         {
             if (this_assembly != null && this_assembly.Name != name)
             {
                 logger.Error("Multiple assembly declarations");
                 errors[nameof(CodeGen)] = "Multiple assembly declarations";
             }
-            this_assembly = new Assembly(name);
+            this_assembly = new MIAssembly(name);
             this_assembly.SetAssemblyAttr(attr);
             if (name != "mscorlib")
                 ExternTable.AddCorlib();
@@ -330,7 +328,7 @@ namespace Mono.ILASM
                         sb.Append(outer.FullName);
                     else
                         sb.Append(outer.Name);
-                    sb.Append("/");
+                    sb.Append('/');
                 }
                 sb.Append(name);
                 cache_name = sb.ToString();
@@ -358,7 +356,7 @@ namespace Mono.ILASM
             typedef_stack_top++;
         }
 
-        public void AddFieldMarshalInfo(PEAPI.NativeType native_type)
+        public void AddFieldMarshalInfo(NativeType native_type)
         {
             current_field_native_type = native_type;
         }
@@ -400,7 +398,7 @@ namespace Mono.ILASM
             manifestResources.Add(mr);
         }
 
-        public PEAPI.DataConstant GetDataConst(string name)
+        public DataConstant GetDataConst(string name)
         {
             DataDef def = (DataDef)data_table[name];
             if (def == null)
@@ -445,7 +443,7 @@ namespace Mono.ILASM
 
         }
 
-        public void BeginAssemblyRef(string name, AssemblyName asmb_name, PEAPI.AssemAttr attr)
+        public void BeginAssemblyRef(string name, AssemblyName asmb_name, AssemAttr attr)
         {
             current_customattrtarget = current_assemblyref = ExternTable.AddAssembly(name, asmb_name, attr);
             current_declsectarget = current_assemblyref;
@@ -463,7 +461,7 @@ namespace Mono.ILASM
             defcont_list.Add(typedef);
         }
 
-        public void AddPermission(PEAPI.SecurityAction sec_action, object perm)
+        public void AddPermission(SecurityAction sec_action, object perm)
         {
             if (CurrentDeclSecurityTarget == null)
                 return;
@@ -471,24 +469,21 @@ namespace Mono.ILASM
             AddPermission(sec_action, perm, CurrentDeclSecurityTarget.DeclSecurity);
         }
 
-        private void AddPermission(PEAPI.SecurityAction sec_action, object perm, DeclSecurity decl_sec)
+        private static void AddPermission(SecurityAction sec_action, object perm, DeclSecurity decl_sec)
         {
-            SSPermissionSet ps = perm as SSPermissionSet;
-            if (ps != null)
+            if (perm is SSPermissionSet ps)
             {
                 decl_sec.AddPermissionSet(sec_action, ps);
                 return;
             }
 
-            IPermission iper = perm as IPermission;
-            if (iper != null)
+            if (perm is IPermission iper)
             {
                 decl_sec.AddPermission(sec_action, iper);
                 return;
             }
 
-            MIPermissionSet ps20 = perm as MIPermissionSet;
-            if (ps20 != null)
+            if (perm is MIPermissionSet ps20)
             {
                 decl_sec.AddPermissionSet(sec_action, ps20);
                 return;
@@ -505,8 +500,8 @@ namespace Mono.ILASM
                     this_module = new Module(Path.GetFileName(output_file), logger, errors);
 
                 //out_stream = new FileStream(output_file, FileMode.Create, FileAccess.Write);
-                
-                pefile = new PEFile(ThisAssembly != null ? ThisAssembly.Name : null, ThisModule.Name, is_dll, ThisAssembly != null, null, stream);
+
+                pefile = new PEFile(ThisAssembly?.Name, ThisModule.Name, is_dll, ThisAssembly != null, null, stream);
                 PEAPI.Assembly asmb = pefile.GetThisAssembly();
 
                 ThisModule.PeapiModule = pefile.GetThisModule();
@@ -543,7 +538,7 @@ namespace Mono.ILASM
                 ThisModule.Resolve(this, pefile.GetThisModule());
 
                 if (sub_system != -1)
-                    pefile.SetSubSystem((PEAPI.SubSystem)sub_system);
+                    pefile.SetSubSystem((SubSystem)sub_system);
                 if (cor_flags != -1)
                     pefile.SetCorFlags(cor_flags);
                 if (stack_reserve != -1)
@@ -560,7 +555,7 @@ namespace Mono.ILASM
                     symwriter.Write(guid);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex.Message);
             }
@@ -571,7 +566,7 @@ namespace Mono.ILASM
             //}
         }
 
-        public PEAPI.Method ResolveMethod(string signature)
+        public Method ResolveMethod(string signature)
         {
             MethodDef methoddef = (MethodDef)global_method_table[signature];
             if (methoddef == null)
@@ -583,7 +578,7 @@ namespace Mono.ILASM
             return methoddef.Resolve(this);
         }
 
-        public PEAPI.Method ResolveVarargMethod(string sig_only_required_params, string sig_with_optional_params,
+        public Method ResolveVarargMethod(string sig_only_required_params, string sig_with_optional_params,
                         CodeGen code_gen, PEAPI.Type[] opt)
         {
             MethodDef methoddef = (MethodDef)global_method_table[sig_only_required_params];
@@ -597,7 +592,7 @@ namespace Mono.ILASM
             return methoddef.GetVarargSig(opt, sig_with_optional_params);
         }
 
-        public PEAPI.Field ResolveField(string name, string type_name)
+        public Field ResolveField(string name, string type_name)
         {
             FieldDef fielddef = (FieldDef)global_field_table[new DictionaryEntry(name, type_name)];
             if (fielddef == null)

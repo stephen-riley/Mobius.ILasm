@@ -6,6 +6,10 @@
     <Platforms>x64</Platforms>
     <IsPackable>false</IsPackable>
     <AssemblyName>Mobius.ILasm.Cli</AssemblyName>    
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <!-- workaround to make IDE0005 show up on build; see https://github.com/dotnet/roslyn/issues/41640 -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mobius.ILASM\Mobius.ILasm.csproj" />
+    <ProjectReference Include="..\Mobius.ILasm\Mobius.ILasm.csproj" />
   </ItemGroup>
 
   <ItemGroup>

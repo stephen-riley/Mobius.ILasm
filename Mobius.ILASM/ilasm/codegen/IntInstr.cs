@@ -8,14 +8,13 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
         public class IntInstr : IInstr {
 
-                private PEAPI.IntOp op;
-                private int operand;
+                readonly private PEAPI.IntOp op;
+                readonly private int operand;
 
                 public IntInstr (PEAPI.IntOp op, int operand, Location loc)
 			: base (loc)

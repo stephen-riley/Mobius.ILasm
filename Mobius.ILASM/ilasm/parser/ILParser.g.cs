@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Security;
 using System.Text;
@@ -24,11 +25,17 @@ using Mobius.ILasm.infrastructure;
 
 namespace Mono.ILASM
 {
-
+    [SuppressMessage("", "CA1822", Justification = "code-gen")]
+    [SuppressMessage("", "CA1825", Justification = "code-gen")]
+    [SuppressMessage("", "IDE0001", Justification = "code-gen")]
+    [SuppressMessage("", "IDE0019", Justification = "code-gen")]
+    [SuppressMessage("", "IDE0020", Justification = "code-gen")]
+    [SuppressMessage("", "IDE0028", Justification = "code-gen")]
+    [SuppressMessage("", "IDE0038", Justification = "code-gen")]
     public class ILParser
     {
 
-        private CodeGen codegen;
+        readonly private CodeGen codegen;
 
         private bool is_value_class;
         private bool is_enum_class;
@@ -36,11 +43,11 @@ namespace Mono.ILASM
         private string pinvoke_mod;
         private string pinvoke_meth;
         private PEAPI.PInvokeAttr pinvoke_attr;
-        private ILTokenizer tokenizer;
+        readonly private ILTokenizer tokenizer;
         const int yacc_verbose_flag = 0;
         KeyValuePair<string, TypeAttr> current_extern;
         private readonly ILogger logger;
-        private Dictionary<string, string> errors;
+        readonly private Dictionary<string, string> errors;
 
         class NameValuePair
         {
@@ -1149,8 +1156,8 @@ namespace Mono.ILASM
             {
                 if (yyTop >= yyStates.Length)
                 {           // dynamically increase
-                    global::System.Array.Resize(ref yyStates, yyStates.Length + yyMax);
-                    global::System.Array.Resize(ref yyVals, yyVals.Length + yyMax);
+                    System.Array.Resize(ref yyStates, yyStates.Length + yyMax);
+                    System.Array.Resize(ref yyVals, yyVals.Length + yyMax);
                 }
                 yyStates[yyTop] = yyState;
                 yyVals[yyTop] = yyVal;
@@ -4804,7 +4811,7 @@ namespace Mono.ILASM
             if (slot < 0)
             {
                 logger.Error(String.Format("Undeclared identifier '{0}'", (string)yyVals[0 + yyTop]));
-                errors[nameof(ILParser)] = $"Undeclared identifier '{(string) yyVals[0 + yyTop]}'";
+                errors[nameof(ILParser)] = $"Undeclared identifier '{(string)yyVals[0 + yyTop]}'";
             }
             codegen.CurrentMethodDef.AddInstr(
                     new IntInstr((IntOp)yyVals[-1 + yyTop], slot, tokenizer.Location));
@@ -4824,7 +4831,7 @@ namespace Mono.ILASM
             if (pos < 0)
             {
                 logger.Error(String.Format("Undeclared identifier '{0}'", (string)yyVals[0 + yyTop]));
-                errors[nameof(ILParser)] = $"Undeclared identifier '{(string) yyVals[0 + yyTop]}'";
+                errors[nameof(ILParser)] = $"Undeclared identifier '{(string)yyVals[0 + yyTop]}'";
             }
 
             codegen.CurrentMethodDef.AddInstr(
@@ -4845,7 +4852,7 @@ namespace Mono.ILASM
             if (slot < 0)
             {
                 logger.Error(String.Format("Undeclared identifier '{0}'", (string)yyVals[0 + yyTop]));
-                errors[nameof(ILParser)] = $"Undeclared identifier '{(string) yyVals[0 + yyTop]}'";
+                errors[nameof(ILParser)] = $"Undeclared identifier '{(string)yyVals[0 + yyTop]}'";
             }
             codegen.CurrentMethodDef.AddInstr(new
                     IntInstr((IntOp)yyVals[-1 + yyTop], slot, tokenizer.Location));
@@ -7869,7 +7876,7 @@ new System.Reflection.AssemblyName();
         using System;
         /** thrown for irrecoverable syntax errors and stack overflow.
           */
-        internal class yyException : System.Exception
+        internal class yyException : Exception
         {
             public yyException(string message) : base(message)
             {

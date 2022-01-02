@@ -1,7 +1,6 @@
 // ScannerAdapter.cs
 // (C) Sergey Chaban (serge@wildwestsoftware.com)
 
-using System;
 
 namespace Mono.ILASM {
 
@@ -9,7 +8,7 @@ namespace Mono.ILASM {
 	/// </summary>
 	public class ScannerAdapter : yyParser.yyInput {
 
-		private ITokenStream tokens;
+		readonly private ITokenStream tokens;
 
 		/// <summary>
 		/// </summary>

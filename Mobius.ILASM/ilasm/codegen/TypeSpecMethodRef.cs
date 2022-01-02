@@ -11,13 +11,14 @@
 using Mobius.ILasm.interfaces;
 using System;
 using System.Collections.Generic;
-
+using System.Runtime.Serialization;
 
 namespace Mono.ILASM
 {
 
     public class TypeSpecMethodRef : BaseMethodRef
     {
+        readonly private static ObjectIDGenerator idGen = new ObjectIDGenerator();
 
         public TypeSpecMethodRef(BaseTypeRef owner,
                         PEAPI.CallConv call_conv, BaseTypeRef ret_type,
@@ -28,8 +29,14 @@ namespace Mono.ILASM
 
         public override void Resolve(CodeGen code_gen)
         {
+            var ptr = idGen.GetId(this, out bool firstTime);
+
+            Console.Write($"* Resolving {owner.FullName}::{name}");
             if (is_resolved)
+            {
+                Console.WriteLine($" - ALREADY RESOLVED: {ptr} {firstTime}");
                 return;
+            }
 
             PEAPI.Type[] param_list = new PEAPI.Type[param.Length];
             string write_name;
@@ -54,6 +61,7 @@ namespace Mono.ILASM
 
             peapi_method.AddCallConv(call_conv);
 
+            Console.WriteLine($" - added to table: {ptr} {firstTime}");
             is_resolved = true;
         }
     }

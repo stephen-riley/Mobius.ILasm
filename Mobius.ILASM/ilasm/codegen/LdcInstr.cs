@@ -8,15 +8,14 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
         public class LdcInstr : IInstr {
 
-                private MiscInstr op;
-                private double d_operand;
-                private long l_operand;
+                readonly private MiscInstr op;
+                readonly private double d_operand;
+                readonly private long l_operand;
 
                 public LdcInstr (MiscInstr op, double operand, Location loc)
 			: base (loc)

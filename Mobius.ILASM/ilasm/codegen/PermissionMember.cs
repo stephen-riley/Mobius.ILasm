@@ -32,10 +32,10 @@ namespace Mono.ILASM {
 
         public class PermissionMember {
 
-                MemberTypes member_type;
-                BaseTypeRef type_ref;
-                string name;
-                object value;
+                readonly MemberTypes member_type;
+                readonly BaseTypeRef type_ref;
+                readonly string name;
+                readonly object value;
 
                 PEAPI.PermissionMember member;
                 

@@ -9,16 +9,15 @@
 
 
 using System;
-using System.Collections.Generic;
 
 namespace Mono.ILASM {
 
 
         public class FieldRef : IFieldRef {
 
-                private TypeRef owner;
-                private BaseTypeRef ret_type;
-                private string name;
+                readonly private TypeRef owner;
+                readonly private BaseTypeRef ret_type;
+                readonly private string name;
 
         private bool is_resolved;
                 private PEAPI.Field peapi_field;

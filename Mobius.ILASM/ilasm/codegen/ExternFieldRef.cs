@@ -8,15 +8,14 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
         public class ExternFieldRef : IFieldRef {
 
-                private ExternTypeRef owner;
-                private BaseTypeRef type;
-                private string name;
+                readonly private ExternTypeRef owner;
+                readonly private BaseTypeRef type;
+                readonly private string name;
 
 		private bool is_resolved;
                 private PEAPI.FieldRef peapi_field;

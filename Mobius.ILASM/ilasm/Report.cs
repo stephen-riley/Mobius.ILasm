@@ -1,7 +1,4 @@
-﻿using Mono.ILASM;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mono.ILASM
 {
@@ -69,7 +66,7 @@ namespace Mono.ILASM
                 location_str = " (" + location.line + ", " + location.column + ") : ";
 
             Console.Error.WriteLine(String.Format("{0}{1}Warning -- {2}",
-                    (file_path != null ? file_path : ""), location_str, message));
+                    (file_path ?? ""), location_str, message));
         }
 
         public static void Message(string message)
@@ -91,7 +88,7 @@ namespace Mono.ILASM
     public class ILAsmException : Exception
     {
 
-        string message;
+        readonly string message;
         string file_path;
         Location location;
 
@@ -136,7 +133,7 @@ namespace Mono.ILASM
                 location_str = " (" + location.line + ", " + location.column + ") : ";
 
             return String.Format("{0}{1}Error : {2}",
-                    (file_path != null ? file_path : ""), location_str, message);
+                    (file_path ?? ""), location_str, message);
         }
 
     }

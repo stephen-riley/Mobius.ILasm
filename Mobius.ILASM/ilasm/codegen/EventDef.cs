@@ -8,9 +8,7 @@
 //
 
 
-using Mobius.ILasm.infrastructure;
 using Mobius.ILasm.interfaces;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -20,9 +18,9 @@ namespace Mono.ILASM
     public class EventDef : ICustomAttrTarget
     {
 
-        private FeatureAttr attr;
-        private string name;
-        private BaseTypeRef type;
+        readonly private FeatureAttr attr;
+        readonly private string name;
+        readonly private BaseTypeRef type;
         private PEAPI.Event event_def;
         private bool is_resolved;
         private ArrayList customattr_list;
@@ -31,8 +29,8 @@ namespace Mono.ILASM
         private MethodRef fire;
         private ArrayList other_list;
         private MethodRef removeon;
-        private ILogger logger;
-        private Dictionary<string, string> errors;
+        readonly private ILogger logger;
+        readonly private Dictionary<string, string> errors;
 
         public EventDef(FeatureAttr attr, BaseTypeRef type, string name, ILogger logger, Dictionary<string, string> errors)
         {

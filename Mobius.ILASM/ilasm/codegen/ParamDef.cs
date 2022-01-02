@@ -8,7 +8,6 @@
 //
 
 
-using System;
 using System.Collections;
 
 
@@ -19,9 +18,9 @@ namespace Mono.ILASM {
         /// </summary>
         public class ParamDef : ICustomAttrTarget {
 
-                private PEAPI.ParamAttr attr;
-                private string name;
-                private BaseTypeRef typeref;
+                readonly private PEAPI.ParamAttr attr;
+                readonly private string name;
+                readonly private BaseTypeRef typeref;
                 private bool is_defined;
                 private PEAPI.Param peapi_param;
                 private PEAPI.Constant defval;

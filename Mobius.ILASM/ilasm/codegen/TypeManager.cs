@@ -7,15 +7,14 @@
 // (C) 2003 Jackson Harper, All rights reserved
 //
 
-using System;
 using System.Collections;
 
 namespace Mono.ILASM {
 
         public class TypeManager {
-                private ArrayList type_list;
-                private Hashtable type_table;
-                private CodeGen code_gen;
+                readonly private ArrayList type_list;
+                readonly private Hashtable type_table;
+                readonly private CodeGen code_gen;
 
                 public TypeManager (CodeGen code_gen)
                 {

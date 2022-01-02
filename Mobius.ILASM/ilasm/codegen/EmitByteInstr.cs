@@ -8,14 +8,12 @@
 //
 
 
-using System;
-using System.Collections;
 
 namespace Mono.ILASM {
 
         public class EmitByteInstr : IInstr {
 
-                private int value;
+                readonly private int value;
 
                 public EmitByteInstr (int value, Location loc)
 			: base (loc)

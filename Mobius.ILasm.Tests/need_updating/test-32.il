@@ -17,7 +17,7 @@
 		//
 		// Test using explicit offsets for branch labels
 		//
-		.method public static int32 main ()
+		.method public static int32 Main (string[] args)
 		{
 			.entrypoint
 

@@ -7,14 +7,13 @@
 // (C) 2003 Ximian, Inc (http://www.ximian.com)
 //
 
-using System;
 using System.Collections;
 
 namespace Mono.ILASM {
 
         public class GenericMethodSig {
 
-                private GenericArguments gen_args;
+                readonly private GenericArguments gen_args;
                 private bool is_resolved;
                 private PEAPI.GenericMethodSig sig;
 

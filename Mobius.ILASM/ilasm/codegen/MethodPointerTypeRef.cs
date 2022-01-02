@@ -20,9 +20,9 @@ namespace Mono.ILASM
     public class MethodPointerTypeRef : BaseTypeRef
     {
 
-        private PEAPI.CallConv callconv;
-        private BaseTypeRef ret;
-        private ArrayList param_list;
+        readonly private PEAPI.CallConv callconv;
+        readonly private BaseTypeRef ret;
+        readonly private ArrayList param_list;
 
         public MethodPointerTypeRef(PEAPI.CallConv callconv, BaseTypeRef ret, ArrayList param_list, ILogger logger, Dictionary<string, string> errors)
                 : this(callconv, ret, param_list, null, String.Empty, logger, errors)
@@ -117,8 +117,8 @@ namespace Mono.ILASM
             }
             else
             {
-                arg_array = new PEAPI.Type[0];
-                opt_array = new PEAPI.Type[0];
+                arg_array = Array.Empty<PEAPI.Type>();
+                opt_array = Array.Empty<PEAPI.Type>();
             }
 
             ret.Resolve(code_gen);

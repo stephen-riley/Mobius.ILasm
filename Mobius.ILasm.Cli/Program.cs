@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Loader;
 using Mobius.ILasm.Core;
 using PowerArgs;
 
@@ -19,7 +17,7 @@ namespace Mobius.ILasm
                 using var memoryStream = new MemoryStream();
                 var driver = new Driver(logger, parsedArgs.Target,
                     parsedArgs.ShowParser, parsedArgs.Debug, parsedArgs.ShowTokens);
-                driver.Assemble(new [] { File.ReadAllText(parsedArgs.InputFile) }, memoryStream);
+                driver.Assemble(new[] { File.ReadAllText(parsedArgs.InputFile) }, memoryStream);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
                 var outputFilename = parsedArgs.OutputFile ??
@@ -41,7 +39,7 @@ namespace Mobius.ILasm
             }
         }
 
-        private void Version()
+        private static void Version()
         {
             var version1 = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             if (version1 is not null)

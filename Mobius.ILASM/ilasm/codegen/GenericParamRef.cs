@@ -23,9 +23,9 @@ namespace Mono.ILASM
 
         /* PEAPI.Type type: Might get modified */
         /* Unmodified GenParam */
-        private PEAPI.GenParam param;
+        readonly private PEAPI.GenParam param;
         private bool is_added; /* Added to TypeSpec table ? */
-        private static Hashtable param_table = new Hashtable();
+        readonly private static Hashtable param_table = new Hashtable();
 
         public GenericParamRef(PEAPI.GenParam gen_param, ILogger logger, string full_name, Dictionary<string, string> errors)
                 : this(gen_param, logger, full_name, null, errors)

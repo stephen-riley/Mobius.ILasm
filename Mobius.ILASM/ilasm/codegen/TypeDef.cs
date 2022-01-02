@@ -8,12 +8,10 @@
 //
 
 
-using Mobius.ILasm.infrastructure;
 using Mobius.ILasm.interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security;
 
 namespace Mono.ILASM
 {
@@ -22,30 +20,30 @@ namespace Mono.ILASM
     {
 
         private PEAPI.TypeAttr attr;
-        private string name_space;
-        private string name;
+        readonly private string name_space;
+        readonly private string name;
         private bool is_defined;
         private bool is_intransit;
-        private BaseClassRef parent;
-        private ArrayList impl_list;
+        readonly private BaseClassRef parent;
+        readonly private ArrayList impl_list;
         private PEAPI.ClassDef classdef;
-        private Hashtable field_table;
-        private ArrayList field_list;
-        private Hashtable method_table;
-        private ArrayList method_list;
+        readonly private Hashtable field_table;
+        readonly private ArrayList field_list;
+        readonly private Hashtable method_table;
+        readonly private ArrayList method_list;
         private ArrayList customattr_list;
         private DeclSecurity decl_sec;
         private ArrayList event_list;
         private ArrayList property_list;
-        private GenericParameters gen_params;
+        readonly private GenericParameters gen_params;
         private ArrayList override_list;
         private ArrayList override_long_list;
-        private TypeDef outer;
+        readonly private TypeDef outer;
 
         private EventDef current_event;
         private PropertyDef current_property;
-        private Dictionary<string, string> errors;
-        private ILogger logger;
+        readonly private Dictionary<string, string> errors;
+        readonly private ILogger logger;
 
         private int size;
         private int pack;
@@ -53,7 +51,7 @@ namespace Mono.ILASM
         private bool is_value_class;
         private bool is_enum_class;
 
-        private Location location;
+        readonly private Location location;
 
         public TypeDef(PEAPI.TypeAttr attr, string name_space, string name,
                         BaseClassRef parent, ArrayList impl_list, Location location, GenericParameters gen_params, TypeDef outer, ILogger logger, Dictionary<string, string> errors)
@@ -329,8 +327,7 @@ namespace Mono.ILASM
 
             gen_params.ResolveConstraints(gen_params, null);
 
-            BaseGenericTypeRef gtr = parent as BaseGenericTypeRef;
-            if (gtr != null)
+            if (parent is BaseGenericTypeRef gtr)
                 gtr.Resolve(gen_params, null);
 
             if (impl_list == null)
@@ -344,12 +341,12 @@ namespace Mono.ILASM
             }
         }
 
-        private bool IsValueType(string ns, string name)
+        private static bool IsValueType(string ns, string name)
         {
             return (ns == "System" && name == "ValueType");
         }
 
-        private bool IsEnumType(string ns, string name)
+        private static bool IsEnumType(string ns, string name)
         {
             return (ns == "System" && name == "Enum");
         }
@@ -374,7 +371,7 @@ namespace Mono.ILASM
                 {
                     /* Nested class, but attr not set accordingly. */
                     logger.Warning(location, String.Format("Nested class '{0}' has non-nested visibility, set to such.", NestedFullName));
-                    attr = attr ^ vis;
+                    attr ^= vis;
                     attr |= (vis == PEAPI.TypeAttr.Public ? PEAPI.TypeAttr.NestedPublic : PEAPI.TypeAttr.NestedPrivate);
                 }
             }
@@ -525,7 +522,7 @@ namespace Mono.ILASM
                 }
             }
 
-            /// Add declarative security to this class
+            // Add declarative security to this class
             if (decl_sec != null)
             {
                 decl_sec.AddTo(code_gen, classdef);

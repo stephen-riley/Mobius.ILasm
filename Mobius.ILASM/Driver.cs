@@ -1,13 +1,10 @@
-using Mobius.ILasm.infrastructure;
 using Mobius.ILasm.interfaces;
 using Mono.ILASM;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using ILAsmException = Mobius.ILasm.infrastructure.ILAsmException;
 
 namespace Mobius.ILasm.Core
@@ -23,34 +20,38 @@ namespace Mobius.ILasm.Core
             Exe
         }
 
-        private Target target = Target.Exe;
+        private readonly Target target = Target.Exe;
 
-        private bool show_tokens = false;
+        private readonly bool show_tokens = false;
 
         // private bool show_method_def = false;
         // private bool show_method_ref = false;
-        private bool show_parser = false;
-        private bool scan_only = false;
-        private bool debugging_info = false;
-        private bool keycontainer = false;
-        private string keyname;
+        private readonly bool show_parser = false;
+        private readonly bool scan_only = false;
+        private readonly bool debugging_info = false;
+#if HAS_MONO_SECURITY
+        private readonly bool keycontainer;
+#endif
+        private readonly string keyname;
 
         private CodeGen codegen;
         private readonly ILogger logger;
-        private Dictionary<string, string> errors;
+        private readonly Dictionary<string, string> errors;
 #if HAS_MONO_SECURITY
-    			private StrongName sn;
+    	private StrongName sn;
 #endif
-        bool noautoinherit;
+        private readonly bool noautoinherit;
 
         public Driver(ILogger logger, Target target, bool showParser, bool debuggingInfo, bool showTokens)
         {
             this.logger = logger;
-            this.errors = new Dictionary<string, string>();
+            errors = new Dictionary<string, string>();
             this.target = target;
-            this.show_parser = showParser;
-            this.debugging_info = debuggingInfo;
-            this.show_tokens = showTokens;
+            show_parser = showParser;
+            debugging_info = debuggingInfo;
+            show_tokens = showTokens;
+            keyname = null;
+            noautoinherit = false;
         }
 
         public bool Assemble(string[] inputs, MemoryStream outputStream)
@@ -60,19 +61,23 @@ namespace Mobius.ILasm.Core
 
         public bool Assemble(MemoryStream[] inputStreams, MemoryStream outputStream)
         {
-            var savedCulture = System.Threading.Thread.CurrentThread.CurrentCulture;            
-            try {
+            System.Globalization.CultureInfo savedCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            try
+            {
                 System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
                 // TODO: improve error reporting:
                 //  - return true/false
                 //  - expose Errors property as a list (filename, errormessage)
                 if (!Run(inputStreams, outputStream))
+                {
                     return false;
+                }
                 //Report.Message("Operation completed successfully");
                 logger.Info("Operation completed successfully");
                 return true;
             }
-            finally {
+            finally
+            {
                 System.Threading.Thread.CurrentThread.CurrentCulture = savedCulture;
             }
         }
@@ -103,10 +108,14 @@ namespace Mobius.ILasm.Core
                 }
 
                 if (scan_only)
+                {
                     return true;
+                }
 
                 if (errors.Any())
+                {
                     return false;
+                }
 
                 if (target != Target.Dll && !codegen.HasEntryPoint)
                 {
@@ -138,7 +147,9 @@ namespace Mobius.ILasm.Core
                 }
 
                 if (errors.Any())
+                {
                     return false;
+                }
             }
             catch (ILAsmException e)
             {
@@ -162,6 +173,7 @@ namespace Mobius.ILasm.Core
                                     }
 #endif
 
+            ResetContext();
             return true;
         }
 
@@ -201,7 +213,9 @@ namespace Mobius.ILasm.Core
             StreamReader reader = new StreamReader(inputStream);
             ILTokenizer scanner = new ILTokenizer(reader);
             if (show_tokens)
+            {
                 scanner.NewTokenEvent += new NewTokenEvent(ShowToken);
+            }
             //if (show_method_def)
             //        MethodTable.MethodDefinedEvent += new MethodDefinedEvent (ShowMethodDef);
             //if (show_method_ref)
@@ -218,15 +232,19 @@ namespace Mobius.ILasm.Core
                 return;
             }
 
-            ILParser parser = new ILParser(codegen, scanner, this.logger, errors);
+            ILParser parser = new ILParser(codegen, scanner, logger, errors);
             //codegen.BeginSourceFile(file_path);
             try
             {
                 if (show_parser)
-                    parser.yyparse(new ScannerAdapter(scanner),
+                {
+                    _ = parser.yyparse(new ScannerAdapter(scanner),
                         new Mono.ILASM.yydebug.yyDebugSimple());
+                }
                 else
-                    parser.yyparse(new ScannerAdapter(scanner), null);
+                {
+                    _ = parser.yyparse(new ScannerAdapter(scanner), null);
+                }
             }
             catch (ILTokenizingException ilte)
             {
@@ -298,10 +316,12 @@ namespace Mobius.ILasm.Core
 
         private static string GetListing(string listing)
         {
-            if (listing == null)
-                return "no listing file";
-            return listing;
+            return listing ?? "no listing file";
         }
 
+        private static void ResetContext()
+        {
+            GenericTypeInst.ResetCache();
+        }
     }
 }

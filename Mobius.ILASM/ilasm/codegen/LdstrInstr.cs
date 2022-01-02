@@ -8,14 +8,13 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
         public class LdstrInstr : IInstr {
 
-                private string operand;
-                private byte[] b_operand;
+                readonly private string operand;
+                readonly private byte[] b_operand;
                 
                 public LdstrInstr (string operand, Location loc)
 			: base (loc)

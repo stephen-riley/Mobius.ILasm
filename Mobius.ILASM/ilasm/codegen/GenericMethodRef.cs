@@ -9,7 +9,6 @@
 
 
 using Mobius.ILasm.interfaces;
-using System;
 using System.Collections.Generic;
 
 namespace Mono.ILASM
@@ -18,8 +17,8 @@ namespace Mono.ILASM
     public class GenericMethodRef : BaseMethodRef
     {
 
-        private BaseMethodRef meth;
-        private GenericMethodSig sig;
+        readonly private BaseMethodRef meth;
+        readonly private GenericMethodSig sig;
 
         public GenericMethodRef(BaseMethodRef meth, GenericMethodSig sig, ILogger logger, Dictionary<string, string> errors)
                 : base(null, meth.CallConv, null, "", null, 0, logger, errors)

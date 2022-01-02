@@ -12,7 +12,7 @@
 
        .custom instance void [mscorlib]System.CLSCompliantAttribute::.ctor(bool) = ( 01 00 01 00 00 )
 
-       .method public static int32 main () {
+       .method public static int32 Main (string[] args) {
                .custom instance void [mscorlib]System.CLSCompliantAttribute::.ctor(bool) = ( 01 00 01 00 00 )
                 
                .entrypoint

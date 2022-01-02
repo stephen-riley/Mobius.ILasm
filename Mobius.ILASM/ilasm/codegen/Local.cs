@@ -8,8 +8,6 @@
 //
 
 
-using Mobius.ILasm.infrastructure;
-using System;
 using System.Collections.Generic;
 
 
@@ -20,9 +18,9 @@ namespace Mono.ILASM
     {
 
         private int slot;
-        private string name;
-        private BaseTypeRef type;
-        private Dictionary<string, string> errors;
+        readonly private string name;
+        readonly private BaseTypeRef type;
+        readonly private Dictionary<string, string> errors;
 
         public Local(int slot, BaseTypeRef type, Dictionary<string, string> errors) : this(slot, null, type, errors)
         {
@@ -56,8 +54,7 @@ namespace Mono.ILASM
         public PEAPI.Local GetPeapiLocal(CodeGen code_gen)
         {
             int ec = errors.Count;
-            BaseGenericTypeRef gtr = type as BaseGenericTypeRef;
-            if (gtr == null)
+            if (type is not BaseGenericTypeRef gtr)
                 type.Resolve(code_gen);
             else
                 gtr.ResolveNoTypeSpec(code_gen);

@@ -9,7 +9,6 @@
 
 
 using Mobius.ILasm.interfaces;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -22,9 +21,9 @@ namespace Mono.ILASM
     public class ExternTypeRef : BaseClassRef, IScope
     {
 
-        private IScope extern_ref;
-        private Hashtable nestedtypes_table;
-        private Hashtable nestedclass_table;
+        readonly private IScope extern_ref;
+        readonly private Hashtable nestedtypes_table;
+        readonly private Hashtable nestedclass_table;
 
         public ExternTypeRef(IScope extern_ref, ILogger logger, string full_name, bool is_valuetype, Dictionary<string, string> errors)
                 : this(extern_ref, logger, full_name, is_valuetype, null, null, errors)
@@ -73,8 +72,7 @@ namespace Mono.ILASM
             if (is_resolved)
                 return;
 
-            ExternTypeRef etr = extern_ref as ExternTypeRef;
-            if (etr != null)
+            if (extern_ref is ExternTypeRef etr)
                 //This is a nested class, so resolve parent
                 etr.Resolve(code_gen);
 
@@ -107,9 +105,7 @@ namespace Mono.ILASM
                 rest = _name.Substring(slash + 1);
             }
 
-            ExternTypeRef ext_typeref = nestedtypes_table[first] as ExternTypeRef;
-
-            if (ext_typeref != null)
+            if (nestedtypes_table[first] is ExternTypeRef ext_typeref)
             {
                 if (is_valuetype && rest == "")
                     ext_typeref.MakeValueClass();
@@ -133,13 +129,10 @@ namespace Mono.ILASM
 
         public PEAPI.ClassRef GetType(string _name, bool is_valuetype)
         {
-            PEAPI.ClassRef klass = nestedclass_table[_name] as PEAPI.ClassRef;
-
-            if (klass != null)
+            if (nestedclass_table[_name] is PEAPI.ClassRef klass)
                 return klass;
 
-            string name_space, name;
-            ExternTable.GetNameAndNamespace(_name, out name_space, out name);
+            ExternTable.GetNameAndNamespace(_name, out string name_space, out string name);
 
             if (is_valuetype)
                 klass = (PEAPI.ClassRef)GetExternTypeRef().AddValueClass(name_space, name);
@@ -153,11 +146,9 @@ namespace Mono.ILASM
 
         public System.Type GetReflectedType()
         {
-            ExternRef er = extern_ref as ExternRef;
-            if (er != null)
+            if (extern_ref is ExternRef er)
             {
-                ExternAssembly ea = er as ExternAssembly;
-                if (ea != null)
+                if (er is ExternAssembly ea)
                 {
                     System.Reflection.Assembly asm = System.Reflection.Assembly.Load(ea.Name);
 

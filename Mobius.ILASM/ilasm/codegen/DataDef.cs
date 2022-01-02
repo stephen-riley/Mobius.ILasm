@@ -8,14 +8,13 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
         public class DataDef {
 
                 private string name;
-                private PEAPI.DataSegment segment;
+                readonly private PEAPI.DataSegment segment;
 
                 private PEAPI.Constant constant;
 

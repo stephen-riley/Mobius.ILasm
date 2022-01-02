@@ -8,15 +8,14 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
 
         public class GlobalFieldRef : IFieldRef {
 
-                private BaseTypeRef ret_type;
-                private string name;
+                readonly private BaseTypeRef ret_type;
+                readonly private string name;
 
                 private PEAPI.Field peapi_field;
 		private bool is_resolved;

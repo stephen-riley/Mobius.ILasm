@@ -8,14 +8,13 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
         public class HandlerBlock {
 		
-                private LabelInfo from_label;
-                private LabelInfo to_label;
+                readonly private LabelInfo from_label;
+                readonly private LabelInfo to_label;
 
                 public HandlerBlock (LabelInfo from_label, LabelInfo to_label)
                 {

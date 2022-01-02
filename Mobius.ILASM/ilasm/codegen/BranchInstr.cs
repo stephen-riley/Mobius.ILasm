@@ -8,15 +8,14 @@
 //
 
 
-using System;
 
 
 namespace Mono.ILASM {
 
         public class BranchInstr : IInstr {
 
-                private PEAPI.BranchOp op;
-                private LabelInfo label;
+                readonly private PEAPI.BranchOp op;
+                readonly private LabelInfo label;
 	
                 public BranchInstr (PEAPI.BranchOp op, LabelInfo label, Location loc)
 			: base (loc)

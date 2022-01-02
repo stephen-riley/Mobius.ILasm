@@ -19,7 +19,7 @@
 
            .class public GenericsB extends [mscorlib]System.Object {
 
-                  .method public static void Main ()
+                  .method public static void Main (string[] args)
                   {
                         .entrypoint
                         .locals init (class Mono.ILASM.Tests.Set<int32>)

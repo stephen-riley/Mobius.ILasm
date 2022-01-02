@@ -7,9 +7,7 @@
 // Copyright 2006 Novell, Inc (http://www.novell.com)
 //
 
-using Mobius.ILasm.infrastructure;
 using Mobius.ILasm.interfaces;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -19,9 +17,9 @@ namespace Mono.ILASM
 
     public class GenericParameter : ICustomAttrTarget
     {
-        string id;
+        readonly string id;
         int num;
-        PEAPI.GenericParamAttributes attr;
+        readonly PEAPI.GenericParamAttributes attr;
         ArrayList constraintsList;
         ArrayList customattrList;
 
@@ -107,8 +105,7 @@ namespace Mono.ILASM
 
             foreach (BaseTypeRef constraint in constraintsList)
             {
-                BaseGenericTypeRef gtr = constraint as BaseGenericTypeRef;
-                if (gtr != null)
+                if (constraint is BaseGenericTypeRef gtr)
                     gtr.Resolve(type_gen_params, method_gen_params);
             }
         }
@@ -131,8 +128,8 @@ namespace Mono.ILASM
     {
         ArrayList param_list;
         string param_str;
-        ILogger logger;
-        private Dictionary<string, string> errors;
+        readonly ILogger logger;
+        readonly private Dictionary<string, string> errors;
 
         public GenericParameters(ILogger logger, Dictionary<string, string> errors)
         {
@@ -211,12 +208,12 @@ namespace Mono.ILASM
         {
             //Build full_name (foo < , >)
             StringBuilder sb = new StringBuilder();
-            sb.Append("<");
+            sb.Append('<');
             foreach (GenericParameter param in param_list)
                 sb.AppendFormat("{0}, ", param);
             //Remove the extra ', ' at the end
             sb.Length -= 2;
-            sb.Append(">");
+            sb.Append('>');
             param_str = sb.ToString();
         }
 

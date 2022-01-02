@@ -7,7 +7,6 @@
 // Copyright 2005 Novell, Inc (http://www.novell.com)
 //
 
-using System;
 using System.Collections;
 using System.Text;
 
@@ -83,8 +82,7 @@ namespace Mono.ILASM
         {
             foreach (BaseTypeRef type in type_list)
             {
-                BaseGenericTypeRef gtr = type as BaseGenericTypeRef;
-                if (gtr != null)
+                if (type is BaseGenericTypeRef gtr)
                     gtr.Resolve(type_gen_params, method_gen_params);
             }
             /* Reset, might have changed (think GenericParamRef) */
@@ -95,12 +93,12 @@ namespace Mono.ILASM
         {
             //Build full_name (foo < , >)
             StringBuilder sb = new StringBuilder();
-            sb.Append("<");
+            sb.Append('<');
             foreach (BaseTypeRef tr in type_list)
                 sb.AppendFormat("{0}, ", tr.FullName);
             //Remove the extra ', ' at the end
             sb.Length -= 2;
-            sb.Append(">");
+            sb.Append('>');
             type_str = sb.ToString();
         }
 

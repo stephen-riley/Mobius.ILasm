@@ -11,7 +11,6 @@
 
 
 using Mobius.ILasm.interfaces;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -20,19 +19,33 @@ namespace Mono.ILASM
 
     public class GenericTypeInst : BaseGenericTypeRef
     {
-
-        private BaseClassRef class_ref;
+        readonly private BaseClassRef class_ref;
         private PEAPI.GenericTypeInst p_gen_inst;
         const bool is_valuetypeinst = false;
-        private GenericArguments gen_args;
+        readonly private GenericArguments gen_args;
         private bool is_added; /* Added to PEFile (to TypeSpec table) ? */
         /* Note: Using static hashtable here as GenericTypeInsts is not cached */
-        private static Hashtable s_method_table = new Hashtable();
-        private static Hashtable s_field_table = new Hashtable();
+        internal static Hashtable s_method_table = new Hashtable();
+        internal static Hashtable s_field_table = new Hashtable();
 
         public GenericTypeInst(BaseClassRef class_ref, GenericArguments gen_args, ILogger logger, bool is_valuetypeinst, Dictionary<string, string> errors)
                 : this(class_ref, gen_args, logger, is_valuetypeinst, null, null, errors)
         {
+            if (s_method_table is null)
+            {
+                s_method_table = new Hashtable();
+            }
+
+            if (s_field_table is null)
+            {
+                s_field_table = new Hashtable();
+            }
+        }
+
+        internal static void ResetCache()
+        {
+            s_method_table = new Hashtable();
+            s_field_table = new Hashtable();
         }
 
         public GenericTypeInst(BaseClassRef class_ref, GenericArguments gen_args, ILogger logger, bool is_valuetypeinst,
@@ -105,8 +118,7 @@ namespace Mono.ILASM
         {
             /* Note: Using FullName here as we are caching in a static hashtable */
             string key = FullName + MethodDef.CreateSignature(ret_type, call_conv, meth_name, param, gen_param_count, true);
-            TypeSpecMethodRef mr = s_method_table[key] as TypeSpecMethodRef;
-            if (mr == null)
+            if (s_method_table[key] is not TypeSpecMethodRef mr)
             {
                 mr = new TypeSpecMethodRef(this, call_conv, ret_type, meth_name, param, gen_param_count, logger, errors);
                 s_method_table[key] = mr;

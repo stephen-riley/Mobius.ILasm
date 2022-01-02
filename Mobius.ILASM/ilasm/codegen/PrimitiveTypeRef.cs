@@ -8,7 +8,6 @@
 //
 
 
-using Mobius.ILasm.infrastructure;
 using Mobius.ILasm.interfaces;
 using System;
 using System.Collections;
@@ -23,7 +22,7 @@ namespace Mono.ILASM
     public class PrimitiveTypeRef : BaseTypeRef
     {
 
-        private static Hashtable s_method_table = new Hashtable();
+        readonly private static Hashtable s_method_table = new Hashtable();
 
         public PrimitiveTypeRef(PEAPI.PrimitiveType type, string full_name, ILogger logger, Dictionary<string, string> errors)
                 : this(type, full_name, null, String.Empty, logger, errors)
@@ -68,17 +67,12 @@ namespace Mono.ILASM
         /// </summary>
         public static PrimitiveTypeRef GetPrimitiveType(string full_name)
         {
-            switch (full_name)
+            return full_name switch
             {
-                case "System.String":
-                case "[System.Runtime]System.String":
-                    return new PrimitiveTypeRef(PEAPI.PrimitiveType.String, full_name, null, default);
-                case "[System.Runtime]System.Object":
-                case "System.Object":
-                    return new PrimitiveTypeRef(PEAPI.PrimitiveType.Object, full_name, null, default);
-                default:
-                    return null;
-            }
+                "System.String" or "[System.Runtime]System.String" => new PrimitiveTypeRef(PEAPI.PrimitiveType.String, full_name, null, default),
+                "[System.Runtime]System.Object" or "System.Object" => new PrimitiveTypeRef(PEAPI.PrimitiveType.Object, full_name, null, default),
+                _ => null,
+            };
         }
 
         protected override BaseMethodRef CreateMethodRef(BaseTypeRef ret_type,
@@ -92,8 +86,7 @@ namespace Mono.ILASM
         {
             /* Use FullName also here, as we are caching in a static hashtable */
             string key = FullName + MethodDef.CreateSignature(ret_type, call_conv, name, param, gen_param_count, true);
-            TypeSpecMethodRef mr = s_method_table[key] as TypeSpecMethodRef;
-            if (mr != null)
+            if (s_method_table[key] is TypeSpecMethodRef mr)
                 return mr;
 
             //FIXME: generic methodref for primitive type?

@@ -7,9 +7,7 @@
 // (C) 2003 Jackson Harper, All rights reserved
 //
 
-using Mobius.ILasm.infrastructure;
 using Mobius.ILasm.interfaces;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +21,7 @@ namespace Mono.ILASM
     public class TypeRef : BaseClassRef
     {
 
-        private Location location;
+        readonly private Location location;
         public static readonly TypeRef Ellipsis = new TypeRef(null, "ELLIPSIS", false, null, default);
         public static readonly TypeRef Any = new TypeRef(null, "any", false, null, default);
 

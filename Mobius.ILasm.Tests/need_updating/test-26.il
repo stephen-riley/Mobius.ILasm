@@ -7,7 +7,7 @@
 
 .class public Test {
 
-       .method public static void main ()
+       .method public static void Main (string[] args)
        {
                 .entrypoint
                 

@@ -27,7 +27,7 @@
 
 .class public Driver extends [mscorlib]System.Object {
 
-	.method public static void Main () {
+	.method public static void Main (string[] args) {
 		.entrypoint
 		newobj instance void class Mono.ILASM.Tests.Covariant<string>::.ctor ()
 		castclass class Mono.ILASM.Tests.Covariant<object>

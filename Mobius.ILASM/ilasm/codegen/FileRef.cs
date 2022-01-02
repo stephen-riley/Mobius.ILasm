@@ -8,16 +8,15 @@
 //
 
 
-using System;
 
 namespace Mono.ILASM {
 
 	public class FileRef {
 
-		private string name;
-		private byte [] hash;
-		private bool has_metadata;
-		private bool entrypoint;
+		readonly private string name;
+		readonly private byte [] hash;
+		readonly private bool has_metadata;
+		readonly private bool entrypoint;
 
 		public FileRef (string name, byte[] hash, bool has_metadata, bool entrypoint)
 		{

@@ -38,7 +38,7 @@ namespace Mono.ILASM {
                 private DeclSecurity decl_sec;
                 private ArrayList customattr_list;
 
-                private string name;
+                readonly private string name;
                 private byte [] public_key;
                 private int major_version;
                 private int minor_version;
