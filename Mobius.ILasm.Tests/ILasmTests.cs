@@ -19,9 +19,6 @@ namespace Mobius.ILasm.Tests
             AssembleAndVerify("./trivial/helloworldconsole.il");
         }
 
-        // This test is turned off as the ./trivial/*.il files do not
-        // have .entrypoints, among other things.
-        // [Ignore]
         [DataTestMethod]
         [DynamicData(nameof(GetIlTestFiles), DynamicDataSourceType.Method)]
         public void TestTrivialFiles(string filename)
