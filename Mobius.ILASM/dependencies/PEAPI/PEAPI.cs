@@ -186,19 +186,19 @@ namespace PEAPI
             //    Hint/Name Tables with entry "_CorExeMain" for .exe file and "_CorDllMain" for .dll (14 bytes)
             //    ASCII string "mscoree.dll" referenced in ImportTable (+ padding = 16 bytes)
             //    Entry Point  (0xFF25 followed by 4 bytes 0x400000 + RVA of .text)
-            Console.WriteLine("IATSize = " + IATSize);
-            Console.WriteLine("CLIHeaderSize = " + CLIHeaderSize);
+            // Console.WriteLine("IATSize = " + IATSize);
+            // Console.WriteLine("CLIHeaderSize = " + CLIHeaderSize);
             metaData.BuildMetaData(IATSize + CLIHeaderSize);
             metaDataOffset = IATSize + CLIHeaderSize;
-            Console.WriteLine("Code starts at " + metaDataOffset);
+            // Console.WriteLine("Code starts at " + metaDataOffset);
             metaDataOffset += metaData.CodeSize();
-            Console.WriteLine("metaDataOffset = " + metaDataOffset);
+            // Console.WriteLine("metaDataOffset = " + metaDataOffset);
             // resourcesStart =
-            Console.WriteLine("metaData.Size() = " + metaData.Size());
+            // Console.WriteLine("metaData.Size() = " + metaData.Size());
             resourcesOffset = metaDataOffset + metaData.Size();
-            Console.WriteLine("resourcesOffset = " + resourcesOffset);
+            // Console.WriteLine("resourcesOffset = " + resourcesOffset);
             resourcesSize = metaData.GetResourcesSize();
-            Console.WriteLine("resourcesSize = " + resourcesSize);
+            // Console.WriteLine("resourcesSize = " + resourcesSize);
             if (reserveStrongNameSignatureSpace)
             {
                 strongNameSigOffset = resourcesOffset + resourcesSize;
@@ -213,31 +213,30 @@ namespace PEAPI
             }
             importTablePadding = NumToAlign(importTableOffset, 16);
             importTableOffset += importTablePadding;
-            Console.WriteLine("importTableOffset = " + importTableOffset);
+            // Console.WriteLine("importTableOffset = " + importTableOffset);
             importLookupTableOffset = importTableOffset + ImportTableSize;
             hintNameTableOffset = importLookupTableOffset + IATSize;
-            Console.WriteLine("hintNameTableOffset = " + hintNameTableOffset);
+            // Console.WriteLine("hintNameTableOffset = " + hintNameTableOffset);
             runtimeEngineOffset = hintNameTableOffset + (uint)hintNameTable.Length;
-            Console.WriteLine("runtimeEngineOffset = " + runtimeEngineOffset);
+            // Console.WriteLine("runtimeEngineOffset = " + runtimeEngineOffset);
             entryPointOffset = runtimeEngineOffset + (uint)runtimeEngine.Length;
-            Console.WriteLine("entrypoint offset = " + entryPointOffset);
+            // Console.WriteLine("entrypoint offset = " + entryPointOffset);
             totalImportTableSize = entryPointOffset - importTableOffset;
-            Console.WriteLine("total import table size = " + totalImportTableSize);
+            // Console.WriteLine("total import table size = " + totalImportTableSize);
             entryPointPadding = NumToAlign(entryPointOffset, 4) + 2;
             entryPointOffset += entryPointPadding;
             text.AddReloc(entryPointOffset + 2);
             text.IncTide(entryPointOffset + 6);
             //if (text.Tide() < fileAlign) fileAlign = minFileAlign;
             text.SetSize(NumToAlign(text.Tide(), fileAlign));
-            Console.WriteLine("text size = " + text.Size() + " text tide = " + text.Tide() + " text padding = " + text.Padding());
-            Console.WriteLine("metaDataOffset = " + Hex.Int(metaDataOffset));
-            Console.WriteLine("importTableOffset = " + Hex.Int(importTableOffset));
-            Console.WriteLine("importLookupTableOffset = " + Hex.Int(importLookupTableOffset));
-            Console.WriteLine("hintNameTableOffset = " + Hex.Int(hintNameTableOffset));
-            Console.WriteLine("runtimeEngineOffset = " + Hex.Int(runtimeEngineOffset));
-            Console.WriteLine("entryPointOffset = " + Hex.Int(entryPointOffset));
-            Console.WriteLine("entryPointPadding = " + Hex.Int(entryPointPadding));
-
+            // Console.WriteLine("text size = " + text.Size() + " text tide = " + text.Tide() + " text padding = " + text.Padding());
+            // Console.WriteLine("metaDataOffset = " + Hex.Int(metaDataOffset));
+            // Console.WriteLine("importTableOffset = " + Hex.Int(importTableOffset));
+            // Console.WriteLine("importLookupTableOffset = " + Hex.Int(importLookupTableOffset));
+            // Console.WriteLine("hintNameTableOffset = " + Hex.Int(hintNameTableOffset));
+            // Console.WriteLine("runtimeEngineOffset = " + Hex.Int(runtimeEngineOffset));
+            // Console.WriteLine("entryPointOffset = " + Hex.Int(entryPointOffset));
+            // Console.WriteLine("entryPointPadding = " + Hex.Int(entryPointPadding));
         }
 
         internal void BuildRelocSection()
@@ -267,9 +266,9 @@ namespace PEAPI
             text.SetRVA(rva);
             offset += text.Size();
             rva = GetNextSectStart(rva, text.Tide());
-            Console.WriteLine("headerSize = " + headerSize);
-            Console.WriteLine("headerPadding = " + headerPadding);
-            Console.WriteLine("textOffset = " + Hex.Int(text.Offset()));
+            // Console.WriteLine("headerSize = " + headerSize);
+            // Console.WriteLine("headerPadding = " + headerPadding);
+            // Console.WriteLine("textOffset = " + Hex.Int(text.Offset()));
             if (sdata != null)
             {
                 sdata.SetSize(NumToAlign(sdata.Tide(), fileAlign));
@@ -313,21 +312,21 @@ namespace PEAPI
         private void WriteHeader()
         {
             Write(DOSHeader);
-            Console.WriteLine("Writing PEHeader at offset " + Seek(0, SeekOrigin.Current));
+            // Console.WriteLine("Writing PEHeader at offset " + Seek(0, SeekOrigin.Current));
             WritePEHeader();
-            Console.WriteLine("Writing text section header at offset " + Hex.Long(Seek(0, SeekOrigin.Current)));
+            // Console.WriteLine("Writing text section header at offset " + Hex.Long(Seek(0, SeekOrigin.Current)));
             text.WriteHeader(this, relocRVA);
             if (sdata != null) sdata.WriteHeader(this, relocRVA);
             if (rsrc != null) rsrc.WriteHeader(this, relocRVA);
-            Console.WriteLine("Writing reloc section header at offset " + Seek(0, SeekOrigin.Current));
+            // Console.WriteLine("Writing reloc section header at offset " + Seek(0, SeekOrigin.Current));
             WriteRelocSectionHeader();
-            Console.WriteLine("Writing padding at offset " + Seek(0, SeekOrigin.Current));
+            // Console.WriteLine("Writing padding at offset " + Seek(0, SeekOrigin.Current));
             WriteZeros(headerPadding);
         }
 
         private void WriteSections()
         {
-            Console.WriteLine("Writing text section at offset " + Seek(0, SeekOrigin.Current));
+            // Console.WriteLine("Writing text section at offset " + Seek(0, SeekOrigin.Current));
             WriteTextSection();
             if (sdata != null) WriteSDataSection();
             if (rsrc != null) WriteRsrcSection();
@@ -344,7 +343,7 @@ namespace PEAPI
         {
             // Import Table
             WriteZeros(importTablePadding);
-            Console.WriteLine("Writing import tables at offset " + Hex.Long(Seek(0, SeekOrigin.Current)));
+            // Console.WriteLine("Writing import tables at offset " + Hex.Long(Seek(0, SeekOrigin.Current)));
             Write(importLookupTableOffset + text.RVA());
             WriteZeros(8);
             Write(runtimeEngineOffset + text.RVA());
@@ -353,7 +352,7 @@ namespace PEAPI
             // Import Lookup Table
             WriteIAT();                // lookup table and IAT are the same
                                        // Hint/Name Table
-            Console.WriteLine("Writing hintname table at " + Hex.Long(Seek(0, SeekOrigin.Current)));
+                                       // Console.WriteLine("Writing hintname table at " + Hex.Long(Seek(0, SeekOrigin.Current)));
             Write(hintNameTable);
             Write(runtimeEngineName.ToCharArray());
         }
@@ -362,9 +361,9 @@ namespace PEAPI
         {
             WriteIAT();
             WriteCLIHeader();
-            Console.WriteLine("Writing code at " + Hex.Long(Seek(0, SeekOrigin.Current)));
+            // Console.WriteLine("Writing code at " + Hex.Long(Seek(0, SeekOrigin.Current)));
             metaData.WriteByteCodes(this);
-            Console.WriteLine("Finished writing code at " + Hex.Long(Seek(0, SeekOrigin.Current)));
+            // Console.WriteLine("Finished writing code at " + Hex.Long(Seek(0, SeekOrigin.Current)));
             largeStrings = metaData.LargeStringsIndex();
             largeGUID = metaData.LargeGUIDIndex();
             largeUS = metaData.LargeUSIndex();
@@ -434,7 +433,7 @@ namespace PEAPI
 
         private void WriteRelocSection()
         {
-            Console.WriteLine("Writing reloc section at " + Seek(0, SeekOrigin.Current) + " = " + relocOffset);
+            // Console.WriteLine("Writing reloc section at " + Seek(0, SeekOrigin.Current) + " = " + relocOffset);
             MemoryStream str = (MemoryStream)reloc.BaseStream;
             Write(str.ToArray());
             WriteZeros(NumToAlign((uint)str.Position, fileAlign));
@@ -648,9 +647,9 @@ namespace PEAPI
         public PEFile(string name, bool isDLL, bool hasAssembly)
             : this(name, null, isDLL, hasAssembly, null, null)
         {
-            Console.WriteLine(Hex.Byte(0x12));
-            Console.WriteLine(Hex.Short(0x1234));
-            Console.WriteLine(Hex.Int(0x12345678));
+            // Console.WriteLine(Hex.Byte(0x12));
+            // Console.WriteLine(Hex.Short(0x1234));
+            // Console.WriteLine(Hex.Int(0x12345678));
         }
 
         /// <summary>
@@ -666,9 +665,9 @@ namespace PEAPI
         public PEFile(string name, bool isDLL, bool hasAssembly, string outputDir)
             : this(name, null, isDLL, hasAssembly, outputDir, null)
         {
-            Console.WriteLine(Hex.Byte(0x12));
-            Console.WriteLine(Hex.Short(0x1234));
-            Console.WriteLine(Hex.Int(0x12345678));
+            // Console.WriteLine(Hex.Byte(0x12));
+            // Console.WriteLine(Hex.Short(0x1234));
+            // Console.WriteLine(Hex.Int(0x12345678));
         }
 
         /// <summary>
@@ -781,7 +780,7 @@ namespace PEAPI
             if (assemName.CompareTo(mscorlibName) == 0) return metaData.mscorlib;
             AssemblyRef anAssem = new AssemblyRef(metaData, assemName);
             metaData.AddToTable(MDTable.AssemblyRef, anAssem);
-            Console.WriteLine("Adding assembly " + assemName);
+            // Console.WriteLine("Adding assembly " + assemName);
             return anAssem;
         }
 
@@ -1125,12 +1124,12 @@ namespace PEAPI
 
         internal void DoBlock(BinaryWriter reloc, uint page, int start, int end)
         {
-            //Console.WriteLine("rva = " + rva + "  page = " + page);
+            // Console.WriteLine("rva = " + rva + "  page = " + page);
             reloc.Write(rva + page);
             reloc.Write((uint)(((end - start + 1) * 2) + 8));
             for (int j = start; j < end; j++)
             {
-                //Console.WriteLine("reloc offset = " + relocs[j]);
+                // Console.WriteLine("reloc offset = " + relocs[j]);
                 reloc.Write((ushort)((0x3 << 12) | (relocs[j] - page)));
             }
             reloc.Write((ushort)0);

@@ -9,13 +9,11 @@
 
 
 using Mobius.ILasm.interfaces;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Mono.ILASM
 {
-
     public class TypeSpecMethodRef : BaseMethodRef
     {
         readonly private static ObjectIDGenerator idGen = new ObjectIDGenerator();
@@ -31,10 +29,10 @@ namespace Mono.ILASM
         {
             var ptr = idGen.GetId(this, out bool firstTime);
 
-            Console.Write($"* Resolving {owner.FullName}::{name}");
+            // Console.Write($"* Resolving {owner.FullName}::{name}");
             if (is_resolved)
             {
-                Console.WriteLine($" - ALREADY RESOLVED: {ptr} {firstTime}");
+                // Console.WriteLine($" - ALREADY RESOLVED: {ptr} {firstTime}");
                 return;
             }
 
@@ -61,7 +59,7 @@ namespace Mono.ILASM
 
             peapi_method.AddCallConv(call_conv);
 
-            Console.WriteLine($" - added to table: {ptr} {firstTime}");
+            // Console.WriteLine($" - added to table: {ptr} {firstTime}");
             is_resolved = true;
         }
     }

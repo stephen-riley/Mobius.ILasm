@@ -66,7 +66,7 @@ namespace PEAPI
 
         internal override void Write(FileImage output)
         {
-            //Console.WriteLine("Writing instruction " + instr + " with size " + size);
+            // Console.WriteLine("Writing instruction " + instr + " with size " + size);
             if (twoByteInstr) output.Write(leadByte);
             output.Write((byte)instr);
         }
@@ -421,7 +421,7 @@ namespace PEAPI
                     buffer[i] = tmp[i];
                 }
             }
-            //Console.WriteLine("Adding instruction at offset " + offset + " with size " + inst.size);
+            // Console.WriteLine("Adding instruction at offset " + offset + " with size " + inst.size);
             inst.offset = offset;
             offset += inst.size;
             buffer[tide++] = inst;
@@ -876,7 +876,7 @@ namespace PEAPI
             if ((offset < smallSize) && (maxStack <= 8) && (locSigIx == 0) && (exceptions == null))
             {
                 // can use tiny header
-                //Console.WriteLine("Tiny Header");
+                // Console.WriteLine("Tiny Header");
                 tinyFormat = true;
                 headerFlags = (ushort)(TinyFormat | ((ushort)codeSize << 2));
                 codeSize++;
@@ -884,7 +884,7 @@ namespace PEAPI
             }
             else
             {
-                //Console.WriteLine("Fat Header");
+                // Console.WriteLine("Fat Header");
                 tinyFormat = false;
                 localSigIx = locSigIx;
                 this.maxStack = (short)maxStack;

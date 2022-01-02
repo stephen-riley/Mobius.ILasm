@@ -1648,7 +1648,7 @@ namespace PEAPI
 
         internal sealed override void Write(FileImage output)
         {
-            //Console.WriteLine("Writing the blob index for a TypeSpec");
+            // Console.WriteLine("Writing the blob index for a TypeSpec");
             output.BlobIndex(sigIx);
         }
     }
@@ -5767,7 +5767,7 @@ namespace PEAPI
             //tilde.SetIndexSizes(strings.LargeIx(),us.LargeIx(),guid.LargeIx(),blob.LargeIx());
             tildeTide = TildeHeaderSize;
             tildeTide += 4 * numTables;
-            //Console.WriteLine("Tilde header + sizes = " + tildeTide);
+            // Console.WriteLine("Tilde header + sizes = " + tildeTide);
             for (int i = 0; i < numMetaDataTables; i++)
             {
                 if (metaDataTables[i] != null)
@@ -5780,7 +5780,7 @@ namespace PEAPI
                 }
             }
             if ((tildeTide % 4) != 0) tildePadding = 4 - (tildeTide % 4);
-            //Console.WriteLine("tildePadding = " + tildePadding);
+            // Console.WriteLine("tildePadding = " + tildePadding);
         }
 
         internal void WriteTildeStream(FileImage output)
@@ -5825,14 +5825,14 @@ namespace PEAPI
         {
             if (table == null)
             {
-                Console.WriteLine("  nope");
+                // Console.WriteLine("  nope");
                 return;
             }
             for (int j = 0; j < table.Count; j++)
             {
                 ((MetaDataElement)table[j]).BuildTables(this);
             }
-            Console.WriteLine("metadata.Size() is = " + Size());
+            // Console.WriteLine("metadata.Size() is = " + Size());
         }
 
         private static void SortTable(ArrayList mTable)
