@@ -94,8 +94,7 @@ namespace Mono.ILASM
 
         public void AddCustomAttribute(CustomAttr customattr)
         {
-            if (customattr_list == null)
-                customattr_list = new ArrayList();
+            customattr_list ??= [];
 
             customattr_list.Add(customattr);
         }

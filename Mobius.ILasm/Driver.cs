@@ -45,7 +45,7 @@ namespace Mobius.ILasm.Core
         public Driver(ILogger logger, Target target, bool showParser, bool debuggingInfo, bool showTokens)
         {
             this.logger = logger;
-            errors = new Dictionary<string, string>();
+            errors = [];
             this.target = target;
             show_parser = showParser;
             debugging_info = debuggingInfo;

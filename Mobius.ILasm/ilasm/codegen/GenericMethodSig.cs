@@ -45,7 +45,7 @@ namespace Mono.ILASM {
                         GenericMethodSig sig = null;
 
                         if (sig_table == null)
-                                sig_table = new Hashtable ();
+                                sig_table = [];
                         else
                                 sig = (GenericMethodSig) sig_table [gen_args.ToString ()];
 

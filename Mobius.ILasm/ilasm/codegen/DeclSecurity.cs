@@ -31,7 +31,7 @@ namespace Mono.ILASM
 
         public DeclSecurity()
         {
-            permissionset_table = new Hashtable();
+            permissionset_table = [];
         }
 
         public void AddPermission(PEAPI.SecurityAction sec_action, IPermission perm)
@@ -64,7 +64,7 @@ namespace Mono.ILASM
             MIPermissionSet ps = null;
 
             if (permissionset20_table == null)
-                permissionset20_table = new Hashtable();
+                permissionset20_table = [];
             else
                 ps = (MIPermissionSet)permissionset20_table[sec_action];
 

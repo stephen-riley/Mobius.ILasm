@@ -40,11 +40,8 @@ namespace Mono.ILASM {
 			if (is_resolved)
 				return;
 
-                        TypeDef owner_def = code_gen.TypeManager[owner.FullName];
-                        // TODO: Consider better message that contain context (method name?)
-                        if (owner_def is null)
-                            throw new Exception($"Unable to find type {owner.FullName}");
-                        peapi_field = owner_def.ResolveField (name, ret_type, code_gen);
+                        TypeDef owner_def = code_gen.TypeManager[owner.FullName] ?? throw new Exception($"Unable to find type {owner.FullName}");
+            peapi_field = owner_def.ResolveField (name, ret_type, code_gen);
 
 			is_resolved = true;
                 }

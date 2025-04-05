@@ -70,7 +70,7 @@ namespace Mono.ILASM
             GenericMethodRef methref = null;
 
             if (gen_method_table == null)
-                gen_method_table = new Hashtable();
+                gen_method_table = [];
             else
                 methref = (GenericMethodRef)gen_method_table[gen_args.ToString()];
 

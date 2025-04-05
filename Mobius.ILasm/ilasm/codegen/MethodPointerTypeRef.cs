@@ -85,8 +85,8 @@ namespace Mono.ILASM
 
             if (param_list != null)
             {
-                ArrayList opt_list = new ArrayList();
-                ArrayList arg_list = new ArrayList();
+                ArrayList opt_list = [];
+                ArrayList arg_list = [];
                 bool in_opt = false;
                 int max = param_list.Count;
 
@@ -117,8 +117,8 @@ namespace Mono.ILASM
             }
             else
             {
-                arg_array = Array.Empty<PEAPI.Type>();
-                opt_array = Array.Empty<PEAPI.Type>();
+                arg_array = [];
+                opt_array = [];
             }
 
             ret.Resolve(code_gen);

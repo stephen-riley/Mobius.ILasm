@@ -71,7 +71,7 @@ namespace Mono.ILASM
         private bool is_ref;
         private bool use_type_spec;
 
-        readonly private static Hashtable type_table = new Hashtable();
+        readonly private static Hashtable type_table = [];
 
         public PeapiTypeRef(PEAPI.Type peapi_type)
         {

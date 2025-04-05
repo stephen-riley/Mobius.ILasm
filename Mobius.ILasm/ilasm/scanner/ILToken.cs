@@ -69,7 +69,7 @@ namespace Mono.ILASM
             OpenAngleBracket = new ILToken(Token.OPEN_ANGLE_BRACKET, "<");
             CloseAngleBracket = new ILToken(Token.CLOSE_ANGLE_BRACKET, ">");
 
-            punctuations = new ILToken[] {
+            punctuations = [
                                 OpenBrace, CloseBrace,
                                 OpenBracket, CloseBracket,
                                 OpenParens, CloseParens,
@@ -77,7 +77,7 @@ namespace Mono.ILASM
                                 Assign, Star, Ampersand,
                                 Plus, Slash, Bang,
                                 OpenAngleBracket, CloseAngleBracket
-                        };
+                        ];
         }
 
         /// <summary>

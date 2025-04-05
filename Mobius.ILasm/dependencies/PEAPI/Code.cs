@@ -754,7 +754,7 @@ namespace PEAPI
         public void AddTryBlock(TryBlock tryBlock)
         {
             if (exceptions == null)
-                exceptions = new ArrayList();
+                exceptions = [];
             else if (exceptions.Contains(tryBlock)) return;
             exceptions.Add(tryBlock);
             tryBlock.ResolveCatchBlocks(metaData);
@@ -777,7 +777,7 @@ namespace PEAPI
         /// </summary>
         public void StartBlock()
         {
-            if (blockStack == null) blockStack = new ArrayList();
+            blockStack ??= [];
             blockStack.Insert(0, NewCodedLabel());
         }
 
@@ -1010,7 +1010,7 @@ namespace PEAPI
     {
         protected bool fatFormat = false;
         protected int flags = 0;
-        readonly ArrayList handlers = new ArrayList();
+        readonly ArrayList handlers = [];
 
         /// <summary>
         /// Create a new try block

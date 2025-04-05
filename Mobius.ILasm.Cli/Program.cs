@@ -3,80 +3,81 @@ using System.IO;
 using Mobius.ILasm.Core;
 using PowerArgs;
 
-namespace Mobius.ILasm
+#pragma warning disable IDE0130
+namespace Mobius.ILasm;
+#pragma warning restore IDE0130
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        var logger = new Logger();
+
+        try
         {
-            var logger = new Logger();
+            var parsedArgs = Args.Parse<Arguments>(args);
+            using var memoryStream = new MemoryStream();
+            var driver = new Driver(logger, parsedArgs.Target,
+                parsedArgs.ShowParser, parsedArgs.Debug, parsedArgs.ShowTokens);
+            driver.Assemble(new[] { File.ReadAllText(parsedArgs.InputFile) }, memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
 
-            try
+            var outputFilename = parsedArgs.OutputFile ??
+                                 $"{Path.GetFileNameWithoutExtension(parsedArgs.InputFile)}.{parsedArgs.Target.ToString().ToLowerInvariant()}";
+            using (FileStream fileStream = new FileStream(outputFilename, FileMode.Create, FileAccess.Write))
             {
-                var parsedArgs = Args.Parse<Arguments>(args);
-                using var memoryStream = new MemoryStream();
-                var driver = new Driver(logger, parsedArgs.Target,
-                    parsedArgs.ShowParser, parsedArgs.Debug, parsedArgs.ShowTokens);
-                driver.Assemble(new[] { File.ReadAllText(parsedArgs.InputFile) }, memoryStream);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                var outputFilename = parsedArgs.OutputFile ??
-                                     $"{Path.GetFileNameWithoutExtension(parsedArgs.InputFile)}.{parsedArgs.Target.ToString().ToLowerInvariant()}";
-                using (FileStream fileStream = new FileStream(outputFilename, FileMode.Create, FileAccess.Write))
-                {
-                    memoryStream.WriteTo(fileStream);
-                    memoryStream.Flush();
-                }
-
-                //var assemblyContext = new AssemblyLoadContext(null);
-                //var assembly = assemblyContext.LoadFromStream(memoryStream);
-                //var assembly = assemblyContext.LoadFromAssemblyPath(@"d:\github\vms\Mobius.ILasm\Mobius.ILasm.Core.Runner\bin\x64\Debug\net8.0\" + outputFilename);
+                memoryStream.WriteTo(fileStream);
+                memoryStream.Flush();
             }
-            catch (ArgException ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ArgUsage.GenerateUsageFromTemplate<Arguments>());
-            }
+
+            //var assemblyContext = new AssemblyLoadContext(null);
+            //var assembly = assemblyContext.LoadFromStream(memoryStream);
+            //var assembly = assemblyContext.LoadFromAssemblyPath(@"d:\github\vms\Mobius.ILasm\Mobius.ILasm.Core.Runner\bin\x64\Debug\net8.0\" + outputFilename);
         }
-
-        private static void Version()
+        catch (ArgException ex)
         {
-            var version1 = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            if (version1 is not null)
-            {
-                string version = version1.ToString();
-                Console.WriteLine("Mono IL assembler compiler version {0}", version);
-            }
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ArgUsage.GenerateUsageFromTemplate<Arguments>());
         }
     }
 
-    public class Arguments
+    private static void Version()
     {
-        // This argument is required and if not specified the user will be prompted.
-        [ArgRequired, ArgDescription("IL file to be parsed"), ArgExistingFile]
-        public string InputFile { get; set; }
-
-        public string OutputFile { get; set; }
-
-        [ArgDefaultValue(Driver.Target.Dll)]
-        public Driver.Target Target { get; set; }
-
-        [ArgShortcut("nai")]
-        public bool NoAutoInherit { get; set; }
-
-        [ArgDefaultValue(false)]
-        public bool Debug { get; set; }
-
-        [ArgDefaultValue(false), ArgShortcut("sp")]
-        public bool ShowParser { get; set; }
-
-        [ArgDefaultValue(false), ArgShortcut("st")]
-        public bool ShowTokens { get; set; }
-
-        [ArgDescription("Strongname using the specified key file")]
-        public string StrongKeyFile { get; set; }
-
-        [ArgDescription("Strongname using the specified key container")]
-        public string StrongKeyContainer { get; set; }
+        var version1 = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        if (version1 is not null)
+        {
+            string version = version1.ToString();
+            Console.WriteLine("Mono IL assembler compiler version {0}", version);
+        }
     }
+}
+
+public class Arguments
+{
+    // This argument is required and if not specified the user will be prompted.
+    [ArgRequired, ArgDescription("IL file to be parsed"), ArgExistingFile]
+    public string InputFile { get; set; }
+
+    public string OutputFile { get; set; }
+
+    [ArgDefaultValue(Driver.Target.Dll)]
+    public Driver.Target Target { get; set; }
+
+    [ArgShortcut("nai")]
+    public bool NoAutoInherit { get; set; }
+
+    [ArgDefaultValue(false)]
+    public bool Debug { get; set; }
+
+    [ArgDefaultValue(false), ArgShortcut("sp")]
+    public bool ShowParser { get; set; }
+
+    [ArgDefaultValue(false), ArgShortcut("st")]
+    public bool ShowTokens { get; set; }
+
+    [ArgDescription("Strongname using the specified key file")]
+    public string StrongKeyFile { get; set; }
+
+    [ArgDescription("Strongname using the specified key container")]
+    public string StrongKeyContainer { get; set; }
 }

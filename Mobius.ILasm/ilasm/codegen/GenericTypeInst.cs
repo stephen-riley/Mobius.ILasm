@@ -25,27 +25,21 @@ namespace Mono.ILASM
         readonly private GenericArguments gen_args;
         private bool is_added; /* Added to PEFile (to TypeSpec table) ? */
         /* Note: Using static hashtable here as GenericTypeInsts is not cached */
-        internal static Hashtable s_method_table = new Hashtable();
-        internal static Hashtable s_field_table = new Hashtable();
+        internal static Hashtable s_method_table = [];
+        internal static Hashtable s_field_table = [];
 
         public GenericTypeInst(BaseClassRef class_ref, GenericArguments gen_args, ILogger logger, bool is_valuetypeinst, Dictionary<string, string> errors)
                 : this(class_ref, gen_args, logger, is_valuetypeinst, null, null, errors)
         {
-            if (s_method_table is null)
-            {
-                s_method_table = new Hashtable();
-            }
+            s_method_table ??= [];
 
-            if (s_field_table is null)
-            {
-                s_field_table = new Hashtable();
-            }
+            s_field_table ??= [];
         }
 
         internal static void ResetCache()
         {
-            s_method_table = new Hashtable();
-            s_field_table = new Hashtable();
+            s_method_table = [];
+            s_field_table = [];
         }
 
         public GenericTypeInst(BaseClassRef class_ref, GenericArguments gen_args, ILogger logger, bool is_valuetypeinst,

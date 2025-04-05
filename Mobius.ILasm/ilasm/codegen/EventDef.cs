@@ -44,8 +44,7 @@ namespace Mono.ILASM
 
         public void AddCustomAttribute(CustomAttr customattr)
         {
-            if (customattr_list == null)
-                customattr_list = new ArrayList();
+            customattr_list ??= [];
 
             customattr_list.Add(customattr);
         }
@@ -129,8 +128,7 @@ namespace Mono.ILASM
 
         public void AddOther(MethodRef method_ref)
         {
-            if (other_list == null)
-                other_list = new ArrayList();
+            other_list ??= [];
             other_list.Add(method_ref);
         }
 

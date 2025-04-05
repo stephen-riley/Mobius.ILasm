@@ -40,8 +40,7 @@ namespace Mono.ILASM
             if (type == null)
                 throw new InternalErrorException();
 
-            if (type_list == null)
-                type_list = new ArrayList();
+            type_list ??= [];
             var prim = PrimitiveTypeRef.GetPrimitiveType(type.FullName);
             if (prim != null)
                 type_list.Add(prim);
@@ -55,8 +54,7 @@ namespace Mono.ILASM
         {
             if (type_list == null)
                 return null;
-            if (type_arr == null)
-                type_arr = (BaseTypeRef[])type_list.ToArray(typeof(BaseTypeRef));
+            type_arr ??= (BaseTypeRef[])type_list.ToArray(typeof(BaseTypeRef));
 
             return type_arr;
         }

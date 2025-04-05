@@ -76,15 +76,15 @@ namespace Mono.ILASM
             this.logger = logger;
             this.errors = errors;
 
-            inst_list = new ArrayList();
-            label_table = new Hashtable();
-            labelref_table = new Hashtable();
-            label_list = new ArrayList();
-            local_list = new ArrayList();
-            named_local_tables = new ArrayList
-            {
+            inst_list = [];
+            label_table = [];
+            labelref_table = [];
+            label_list = [];
+            local_list = [];
+            named_local_tables =
+            [
                 new Hashtable()
-            };
+            ];
             current_scope_depth = 0;
 
             entry_point = false;
@@ -164,8 +164,7 @@ namespace Mono.ILASM
         {
             get
             {
-                if (decl_sec == null)
-                    decl_sec = new DeclSecurity();
+                decl_sec ??= new DeclSecurity();
                 return decl_sec;
             }
         }
@@ -184,7 +183,7 @@ namespace Mono.ILASM
         {
 
             if (param_list == null)
-                return Array.Empty<BaseTypeRef>();
+                return [];
             int count = 0;
             BaseTypeRef[] type_list = new BaseTypeRef[param_list.Count];
             foreach (ParamDef param in param_list)
@@ -234,8 +233,7 @@ namespace Mono.ILASM
 
         public void AddCustomAttribute(CustomAttr customattr)
         {
-            if (customattr_list == null)
-                customattr_list = new ArrayList();
+            customattr_list ??= [];
 
             customattr_list.Add(customattr);
         }
@@ -324,7 +322,7 @@ namespace Mono.ILASM
 
         public LocalVariableEntry[] GetLocalVars()
         {
-            ArrayList named_locals = new ArrayList();
+            ArrayList named_locals = [];
             foreach (Local local in local_list)
             {
                 if (local.Name != null)
@@ -406,8 +404,7 @@ namespace Mono.ILASM
             if (gen_params == null && type_params == null)
                 return;
 
-            if (gen_params != null)
-                gen_params.ResolveConstraints(type_params, gen_params);
+            gen_params?.ResolveConstraints(type_params, gen_params);
 
             if (RetType is BaseGenericTypeRef gtr)
                 gtr.Resolve(type_params, gen_params);
@@ -418,8 +415,7 @@ namespace Mono.ILASM
             foreach (ParamDef param in param_list)
             {
                 gtr = param.Type as BaseGenericTypeRef;
-                if (gtr != null)
-                    gtr.Resolve(type_params, gen_params);
+                gtr?.Resolve(type_params, gen_params);
             }
         }
 
@@ -476,7 +472,7 @@ namespace Mono.ILASM
             }
             else
             {
-                param_array = Array.Empty<PEAPI.Param>();
+                param_array = [];
             }
 
             return param_array;
@@ -490,7 +486,7 @@ namespace Mono.ILASM
             PEAPI.MethodRef methref = null;
             if (vararg_sig_table == null)
             {
-                vararg_sig_table = new Hashtable();
+                vararg_sig_table = [];
             }
             else
             {
@@ -551,8 +547,7 @@ namespace Mono.ILASM
             }
 
             // Generic type parameters
-            if (gen_params != null)
-                gen_params.Resolve(code_gen, methoddef);
+            gen_params?.Resolve(code_gen, methoddef);
 
             if (type_def == null)
             {
@@ -726,13 +721,11 @@ namespace Mono.ILASM
                     if (label_pos >= label_info.Length)
                         next_label_pos = -1;
                 }
-                if (source != null)
-                    source.MarkLocation(instr.Location.line, cil.Offset);
+                source?.MarkLocation(instr.Location.line, cil.Offset);
                 instr.Emit(code_gen, this, cil);
             }
 
-            if (source != null)
-                source.MarkLocation(source.EndLine, cil.Offset);
+            source?.MarkLocation(source.EndLine, cil.Offset);
         }
 
         public LabelInfo AddLabel(string name)

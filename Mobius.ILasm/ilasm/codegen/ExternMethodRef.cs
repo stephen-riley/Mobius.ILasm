@@ -77,8 +77,8 @@ namespace Mono.ILASM
             if (is_resolved)
                 return;
 
-            ArrayList param_list = new ArrayList();
-            ArrayList opt_list = new ArrayList();
+            ArrayList param_list = [];
+            ArrayList opt_list = [];
             bool in_opt = false;
             string write_name;
 

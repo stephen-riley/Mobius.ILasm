@@ -42,8 +42,8 @@ namespace Mono.ILASM
         {
             this.name = name;
             this.logger = logger;
-            typeref_table = new Hashtable();
-            class_table = new Hashtable();
+            typeref_table = [];
+            class_table = [];
             this.errors = errors;
         }
 
@@ -59,8 +59,7 @@ namespace Mono.ILASM
 
         public void AddCustomAttribute(CustomAttr customattr)
         {
-            if (customattr_list == null)
-                customattr_list = new ArrayList();
+            customattr_list ??= [];
 
             customattr_list.Add(customattr);
         }
@@ -72,8 +71,8 @@ namespace Mono.ILASM
             int slash = full_name.IndexOf('/');
             if (slash > 0)
             {
-                first = full_name.Substring(0, slash);
-                rest = full_name.Substring(slash + 1);
+                first = full_name[..slash];
+                rest = full_name[(slash + 1)..];
             }
 
 
@@ -190,8 +189,7 @@ namespace Mono.ILASM
         {
             get
             {
-                if (decl_sec == null)
-                    decl_sec = new DeclSecurity();
+                decl_sec ??= new DeclSecurity();
                 return decl_sec;
             }
         }
@@ -218,10 +216,9 @@ namespace Mono.ILASM
                 foreach (CustomAttr customattr in customattr_list)
                     customattr.AddTo(code_gen, AssemblyRef);
 
-            if (decl_sec != null)
-                decl_sec.AddTo(code_gen, AssemblyRef);
+            decl_sec?.AddTo(code_gen, AssemblyRef);
 
-            class_table = new Hashtable();
+            class_table = [];
 
             is_resolved = true;
         }
@@ -290,8 +287,8 @@ namespace Mono.ILASM
                 int pos = name.LastIndexOf('.');
                 if (pos > 0)
                 {
-                    ns = name.Substring(0, pos);
-                    name = name.Substring(pos + 1);
+                    ns = name[..pos];
+                    name = name[(pos + 1)..];
                 }
 
                 code_gen.PEFile.AddExternClass(ns, name, ta, ar.AssemblyRef);
@@ -335,7 +332,7 @@ namespace Mono.ILASM
             ExternAssembly ea;
             if (assembly_table == null)
             {
-                assembly_table = new Hashtable();
+                assembly_table = [];
             }
             else
             {
@@ -356,7 +353,7 @@ namespace Mono.ILASM
             ExternModule em;
             if (module_table == null)
             {
-                module_table = new Hashtable();
+                module_table = [];
             }
             else
             {
@@ -374,8 +371,7 @@ namespace Mono.ILASM
 
         public void AddClass(string name, TypeAttr ta, string assemblyReference)
         {
-            if (class_table == null)
-                class_table = new List<ExternClass>();
+            class_table ??= [];
 
             class_table.Add(new ExternClass(name, ta, assemblyReference));
         }
@@ -468,8 +464,8 @@ namespace Mono.ILASM
                 return;
             }
 
-            name_space = full_name.Substring(0, last_dot);
-            name = full_name.Substring(last_dot + 1);
+            name_space = full_name[..last_dot];
+            name = full_name[(last_dot + 1)..];
         }
 
     }

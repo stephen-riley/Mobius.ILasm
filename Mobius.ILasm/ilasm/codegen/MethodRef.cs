@@ -45,7 +45,7 @@ namespace Mono.ILASM
             }
             else
             {
-                ArrayList opt_list = new ArrayList();
+                ArrayList opt_list = [];
                 bool in_opt = false;
                 foreach (BaseTypeRef type in param)
                 {

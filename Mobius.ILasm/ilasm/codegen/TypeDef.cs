@@ -65,11 +65,11 @@ namespace Mono.ILASM
             this.logger = logger;
             this.errors = errors;
 
-            field_table = new Hashtable();
-            field_list = new ArrayList();
+            field_table = [];
+            field_list = [];
 
-            method_table = new Hashtable();
-            method_list = new ArrayList();
+            method_table = [];
+            method_list = [];
 
             size = -1;
             pack = -1;
@@ -87,10 +87,10 @@ namespace Mono.ILASM
             if (lastdot >= 0 && outer == null)
             {
                 if (name_space == null || name_space == "")
-                    this.name_space = name.Substring(0, lastdot);
+                    this.name_space = name[..lastdot];
                 else
-                    this.name_space = name_space + "." + name.Substring(0, lastdot);
-                this.name = name.Substring(lastdot + 1);
+                    this.name_space = name_space + "." + name[..lastdot];
+                this.name = name[(lastdot + 1)..];
             }
             else
             {
@@ -174,24 +174,21 @@ namespace Mono.ILASM
         {
             get
             {
-                if (decl_sec == null)
-                    decl_sec = new DeclSecurity();
+                decl_sec ??= new DeclSecurity();
                 return decl_sec;
             }
         }
 
         public void AddOverride(MethodDef body, BaseTypeRef parent, string name)
         {
-            if (override_list == null)
-                override_list = new ArrayList();
+            override_list ??= [];
             override_list.Add(new DictionaryEntry(body,
                                new DictionaryEntry(parent, name)));
         }
 
         public void AddOverride(string sig, BaseMethodRef decl)
         {
-            if (override_long_list == null)
-                override_long_list = new ArrayList();
+            override_long_list ??= [];
             override_long_list.Add(new DictionaryEntry(sig,
                                                     decl));
         }
@@ -260,8 +257,7 @@ namespace Mono.ILASM
 
         public void EndEventDef()
         {
-            if (event_list == null)
-                event_list = new ArrayList();
+            event_list ??= [];
 
             event_list.Add(current_event);
             current_event = null;
@@ -280,8 +276,7 @@ namespace Mono.ILASM
 
         public void EndPropertyDef()
         {
-            if (property_list == null)
-                property_list = new ArrayList();
+            property_list ??= [];
 
             property_list.Add(current_property);
             current_property = null;
@@ -289,8 +284,7 @@ namespace Mono.ILASM
 
         public void AddCustomAttribute(CustomAttr customattr)
         {
-            if (customattr_list == null)
-                customattr_list = new ArrayList();
+            customattr_list ??= [];
 
             customattr_list.Add(customattr);
         }
@@ -336,8 +330,7 @@ namespace Mono.ILASM
             foreach (BaseClassRef impl in impl_list)
             {
                 gtr = impl as BaseGenericTypeRef;
-                if (gtr != null)
-                    gtr.Resolve(gen_params, null);
+                gtr?.Resolve(gen_params, null);
             }
         }
 
@@ -466,8 +459,7 @@ namespace Mono.ILASM
                 }
             }
 
-            if (gen_params != null)
-                gen_params.Resolve(code_gen, classdef);
+            gen_params?.Resolve(code_gen, classdef);
 
             is_intransit = false;
 
@@ -476,7 +468,7 @@ namespace Mono.ILASM
 
         public void DefineContents(CodeGen code_gen)
         {
-            ArrayList fielddef_list = new ArrayList();
+            ArrayList fielddef_list = [];
             foreach (FieldDef fielddef in field_list)
             {
                 if (is_enum_class && fielddef.Name == "value__")

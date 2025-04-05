@@ -53,7 +53,7 @@ namespace Mono.ILASM
             string sig = gen_args.ToString();
 
             if (p_genericinst_table == null)
-                p_genericinst_table = new Hashtable();
+                p_genericinst_table = [];
             else
                 gtri = p_genericinst_table[sig] as PEAPI.GenericTypeInst;
 

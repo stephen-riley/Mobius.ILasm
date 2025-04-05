@@ -78,7 +78,7 @@ namespace Mono.ILASM
             /* Note: FullName not reqd as this is cached per object */
             string key = MethodDef.CreateSignature(ret_type, call_conv, name, param, gen_param_count, true);
             if (method_table == null)
-                method_table = new Hashtable();
+                method_table = [];
             else
                 mr = (BaseMethodRef)method_table[key];
 
@@ -99,7 +99,7 @@ namespace Mono.ILASM
             string key = ret_type.FullName + name;
 
             if (field_table == null)
-                field_table = new Hashtable();
+                field_table = [];
             else
                 fr = (IFieldRef)field_table[key];
 

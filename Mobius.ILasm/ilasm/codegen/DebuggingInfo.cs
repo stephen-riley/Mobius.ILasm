@@ -23,7 +23,7 @@ namespace Mono.ILASM
         public SymbolWriter(string filename)
             : base(filename)
         {
-            methods = new ArrayList();
+            methods = [];
         }
 
         public SourceMethod BeginMethod(MethodDef method, Location start)
@@ -72,7 +72,7 @@ namespace Mono.ILASM
             this.method = method;
             this.StartLine = start.line;
 
-            lines = new ArrayList();
+            lines = [];
             MarkLocation(start.line, 0);
         }
 

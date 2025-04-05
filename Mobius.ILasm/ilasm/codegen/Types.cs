@@ -19,7 +19,7 @@ namespace Mono.ILASM
         {
             dummy = new Object();
 
-            defaultTypes = new Hashtable();
+            defaultTypes = [];
             Hashtable t = defaultTypes;
 
             t["object"] = Type.GetType("System.Object");
@@ -66,7 +66,7 @@ namespace Mono.ILASM
         {
             if (defaultTypes.Contains(name)) return;
 
-            if (userTypes == null) userTypes = new Hashtable();
+            userTypes ??= [];
             userTypes[name] = type ?? dummy;
         }
 

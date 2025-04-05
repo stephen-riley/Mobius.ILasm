@@ -30,8 +30,7 @@ namespace Mono.ILASM {
                 private static void AllocTable (ref Hashtable tbl, int size)
                 {
                         lock (mutex) {
-                                if (tbl == null)
-                                        tbl = new Hashtable (size);
+                                tbl ??= new Hashtable (size);
                         }
                 }
 

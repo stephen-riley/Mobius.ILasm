@@ -21,7 +21,7 @@ namespace Mono.ILASM {
 			: base (loc)
                 {
 			this.block = block;
-			clause_list = new ArrayList ();
+			clause_list = [];
                 }
 
                 public void AddSehClause (ISehClause clause)

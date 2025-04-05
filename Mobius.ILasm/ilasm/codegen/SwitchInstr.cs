@@ -47,7 +47,7 @@ namespace Mono.ILASM
             }
             else
             {
-                label_array = System.Array.Empty<PEAPI.CILLabel>();
+                label_array = [];
             }
 
             cil.Switch(label_array);

@@ -25,7 +25,12 @@ dotnet_diagnostic.IDE0060.severity = none
 dotnet_diagnostic.IDE0063.severity = none
 dotnet_diagnostic.IDE0066.severity = none
 dotnet_diagnostic.IDE0090.severity = none
+dotnet_diagnostic.IDE0160.severity = none
+dotnet_diagnostic.IDE0290.severity = none
 dotnet_diagnostic.IDE1006.severity = none
 dotnet_diagnostic.SYSLIB0003.severity = none
 
-csharp_style_prefer_range_operator = false
+csharp_style_prefer_range_operator = true
+
+# bug in dotnet format--show as error so that we can fix manually
+dotnet_diagnostic.IDE0130.severity = error

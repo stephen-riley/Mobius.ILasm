@@ -57,8 +57,7 @@ namespace Mono.ILASM
             if (constraint == null)
                 throw new InternalErrorException();
 
-            if (constraintsList == null)
-                constraintsList = new ArrayList();
+            constraintsList ??= [];
 
             constraintsList.Add(constraint);
         }
@@ -70,8 +69,7 @@ namespace Mono.ILASM
 
         public void AddCustomAttribute(CustomAttr customattr)
         {
-            if (customattrList == null)
-                customattrList = new ArrayList();
+            customattrList ??= [];
 
             customattrList.Add(customattr);
         }
@@ -155,8 +153,7 @@ namespace Mono.ILASM
             if (gen_param == null)
                 throw new InternalErrorException();
 
-            if (param_list == null)
-                param_list = new ArrayList();
+            param_list ??= [];
             gen_param.Num = param_list.Count;
             param_list.Add(gen_param);
             param_str = null;

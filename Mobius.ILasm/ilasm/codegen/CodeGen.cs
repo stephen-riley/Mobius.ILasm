@@ -86,14 +86,14 @@ namespace Mono.ILASM
 
             type_manager = new TypeManager(this);
             extern_table = new ExternTable(logger);
-            typedef_stack = new ArrayList();
+            typedef_stack = [];
             typedef_stack_top = 0;
-            global_field_table = new Hashtable();
-            global_method_table = new Hashtable();
+            global_field_table = [];
+            global_method_table = [];
 
-            data_table = new Hashtable();
+            data_table = [];
 
-            defcont_list = new ArrayList();
+            defcont_list = [];
 
             sub_system = -1;
             cor_flags = -1;
@@ -180,7 +180,7 @@ namespace Mono.ILASM
             TypeRef tr = null;
 
             if (typeref_table == null)
-                typeref_table = new Hashtable();
+                typeref_table = [];
             else
                 tr = typeref_table[name] as TypeRef;
 
@@ -201,7 +201,7 @@ namespace Mono.ILASM
             GlobalMethodRef methref = null;
 
             if (global_methodref_table == null)
-                global_methodref_table = new Hashtable();
+                global_methodref_table = [];
             else
                 methref = (GlobalMethodRef)global_methodref_table[key];
 
@@ -221,7 +221,7 @@ namespace Mono.ILASM
             GlobalFieldRef fieldref = null;
 
             if (global_fieldref_table == null)
-                global_fieldref_table = new Hashtable();
+                global_fieldref_table = [];
             else
                 fieldref = (GlobalFieldRef)global_fieldref_table[key];
 
@@ -300,14 +300,12 @@ namespace Mono.ILASM
 
         public void BeginSourceFile(string name)
         {
-            if (symwriter != null)
-                symwriter.BeginSourceFile(name);
+            symwriter?.BeginSourceFile(name);
         }
 
         public void EndSourceFile()
         {
-            if (symwriter != null)
-                symwriter.EndSourceFile();
+            symwriter?.EndSourceFile();
         }
 
         public void BeginTypeDef(TypeAttr attr, string name, BaseClassRef parent,
@@ -393,8 +391,7 @@ namespace Mono.ILASM
 
         public void AddManifestResource(ManifestResource mr)
         {
-            if (manifestResources == null)
-                manifestResources = new ArrayList();
+            manifestResources ??= [];
             manifestResources.Add(mr);
         }
 
@@ -425,8 +422,7 @@ namespace Mono.ILASM
 
         public void EndMethodDef(Location location)
         {
-            if (symwriter != null)
-                symwriter.EndMethod(location);
+            symwriter?.EndMethod(location);
 
             current_methoddef = null;
         }
@@ -506,8 +502,7 @@ namespace Mono.ILASM
 
                 ThisModule.PeapiModule = pefile.GetThisModule();
 
-                if (file_ref != null)
-                    file_ref.Resolve(this);
+                file_ref?.Resolve(this);
 
                 extern_table.Resolve(this);
                 type_manager.DefineAll();
@@ -533,8 +528,7 @@ namespace Mono.ILASM
                     typedef.DefineContents(this);
                 }
 
-                if (ThisAssembly != null)
-                    ThisAssembly.Resolve(this, pefile.GetThisAssembly());
+                ThisAssembly?.Resolve(this, pefile.GetThisAssembly());
                 ThisModule.Resolve(this, pefile.GetThisModule());
 
                 if (sub_system != -1)

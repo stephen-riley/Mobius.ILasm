@@ -59,8 +59,7 @@ namespace Mono.ILASM {
 
                 public DeclSecurity DeclSecurity {
                         get { 
-                                if (decl_sec == null)
-                                        decl_sec = new DeclSecurity ();
+                                decl_sec ??= new DeclSecurity ();
                                 return decl_sec; 
                         }
                 }
@@ -95,8 +94,7 @@ namespace Mono.ILASM {
 
                 public void AddCustomAttribute (CustomAttr customattr)
                 {
-                        if (customattr_list == null)
-                                customattr_list = new ArrayList ();
+                        customattr_list ??= [];
 
                         customattr_list.Add (customattr);
                 }
@@ -108,8 +106,7 @@ namespace Mono.ILASM {
                                         customattr.AddTo (code_gen, asm);
                                 }
                         
-                        if (decl_sec != null)
-				decl_sec.AddTo (code_gen, asm);
+                        decl_sec?.AddTo (code_gen, asm);
 
 
                         asm.AddAssemblyInfo(major_version,

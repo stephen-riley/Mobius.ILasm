@@ -22,7 +22,7 @@ namespace Mono.ILASM
     public class PrimitiveTypeRef : BaseTypeRef
     {
 
-        readonly private static Hashtable s_method_table = new Hashtable();
+        readonly private static Hashtable s_method_table = [];
 
         public PrimitiveTypeRef(PEAPI.PrimitiveType type, string full_name, ILogger logger, Dictionary<string, string> errors)
                 : this(type, full_name, null, String.Empty, logger, errors)
@@ -33,8 +33,7 @@ namespace Mono.ILASM
                 : base(full_name, conv_list, sig_mod, logger, errors)
         {
             this.type = type;
-            if (SigMod == null)
-                SigMod = String.Empty;
+            SigMod ??= String.Empty;
         }
 
         public override BaseTypeRef Clone()

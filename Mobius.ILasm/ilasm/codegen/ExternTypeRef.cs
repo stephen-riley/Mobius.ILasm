@@ -36,8 +36,8 @@ namespace Mono.ILASM
         {
             this.extern_ref = extern_ref;
 
-            nestedclass_table = new Hashtable();
-            nestedtypes_table = new Hashtable();
+            nestedclass_table = [];
+            nestedtypes_table = [];
         }
 
         public override BaseTypeRef Clone()
@@ -101,8 +101,8 @@ namespace Mono.ILASM
 
             if (slash > 0)
             {
-                first = _name.Substring(0, slash);
-                rest = _name.Substring(slash + 1);
+                first = _name[..slash];
+                rest = _name[(slash + 1)..];
             }
 
             if (nestedtypes_table[first] is ExternTypeRef ext_typeref)

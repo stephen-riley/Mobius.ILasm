@@ -50,9 +50,9 @@ namespace Mono.CompilerServices.SymbolWriter
 
         public MonoSymbolWriter(string filename)
         {
-            this.methods = new List<SourceMethodBuilder>();
-            this.sources = new List<SourceFileEntry>();
-            this.comp_units = new List<CompileUnitEntry>();
+            this.methods = [];
+            this.sources = [];
+            this.comp_units = [];
             this.file = new MonoSymbolFile();
 
             this.filename = filename + ".mdb";

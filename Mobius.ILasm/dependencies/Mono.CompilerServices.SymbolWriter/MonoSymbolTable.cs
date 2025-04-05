@@ -298,7 +298,7 @@ namespace Mono.CompilerServices.SymbolWriter
         }
     }
 
-    public struct LocalVariableEntry
+    public readonly struct LocalVariableEntry
     {
         #region This is actually written to the symbol file
         public readonly int Index;
@@ -320,21 +320,21 @@ namespace Mono.CompilerServices.SymbolWriter
             BlockIndex = reader.ReadLeb128();
         }
 
-        internal void Write(MonoSymbolFile file, MyBinaryWriter bw)
+        internal readonly void Write(MonoSymbolFile file, MyBinaryWriter bw)
         {
             bw.WriteLeb128(Index);
             bw.Write(Name);
             bw.WriteLeb128(BlockIndex);
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return String.Format("[LocalVariable {0}:{1}:{2}]",
                           Name, Index, BlockIndex - 1);
         }
     }
 
-    public struct CapturedVariable
+    public readonly struct CapturedVariable
     {
         #region This is actually written to the symbol file
         public readonly string Name;
@@ -364,21 +364,21 @@ namespace Mono.CompilerServices.SymbolWriter
             Kind = (CapturedKind)reader.ReadByte();
         }
 
-        internal void Write(MyBinaryWriter bw)
+        internal readonly void Write(MyBinaryWriter bw)
         {
             bw.Write(Name);
             bw.Write(CapturedName);
             bw.Write((byte)Kind);
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return String.Format("[CapturedVariable {0}:{1}:{2}]",
                           Name, CapturedName, Kind);
         }
     }
 
-    public struct CapturedScope
+    public readonly struct CapturedScope
     {
         #region This is actually written to the symbol file
         public readonly int Scope;
@@ -397,20 +397,20 @@ namespace Mono.CompilerServices.SymbolWriter
             CapturedName = reader.ReadString();
         }
 
-        internal void Write(MyBinaryWriter bw)
+        internal readonly void Write(MyBinaryWriter bw)
         {
             bw.WriteLeb128(Scope);
             bw.Write(CapturedName);
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return String.Format("[CapturedScope {0}:{1}]",
                           Scope, CapturedName);
         }
     }
 
-    public struct ScopeVariable
+    public readonly struct ScopeVariable
     {
         #region This is actually written to the symbol file
         public readonly int Scope;
@@ -429,13 +429,13 @@ namespace Mono.CompilerServices.SymbolWriter
             Index = reader.ReadLeb128();
         }
 
-        internal void Write(MyBinaryWriter bw)
+        internal readonly void Write(MyBinaryWriter bw)
         {
             bw.WriteLeb128(Scope);
             bw.WriteLeb128(Index);
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return String.Format("[ScopeVariable {0}:{1}]", Scope, Index);
         }
@@ -447,8 +447,8 @@ namespace Mono.CompilerServices.SymbolWriter
         public readonly int ID;
         #endregion
 
-        readonly List<CapturedVariable> captured_vars = new List<CapturedVariable>();
-        readonly List<CapturedScope> captured_scopes = new List<CapturedScope>();
+        readonly List<CapturedVariable> captured_vars = [];
+        readonly List<CapturedScope> captured_scopes = [];
 
         public AnonymousScopeEntry(int id)
         {
@@ -550,7 +550,7 @@ namespace Mono.CompilerServices.SymbolWriter
             this.Index = file.AddCompileUnit(this);
 
             creating = true;
-            namespaces = new List<NamespaceEntry>();
+            namespaces = [];
         }
 
         public void AddFile(SourceFileEntry file)
@@ -558,8 +558,7 @@ namespace Mono.CompilerServices.SymbolWriter
             if (!creating)
                 throw new InvalidOperationException();
 
-            if (include_files == null)
-                include_files = new List<SourceFileEntry>();
+            include_files ??= [];
 
             include_files.Add(file);
         }
@@ -645,13 +644,13 @@ namespace Mono.CompilerServices.SymbolWriter
                 int count_includes = reader.ReadLeb128();
                 if (count_includes > 0)
                 {
-                    include_files = new List<SourceFileEntry>();
+                    include_files = [];
                     for (int i = 0; i < count_includes; i++)
                         include_files.Add(file.GetSourceFile(reader.ReadLeb128()));
                 }
 
                 int count_ns = reader.ReadLeb128();
-                namespaces = new List<NamespaceEntry>();
+                namespaces = [];
                 for (int i = 0; i < count_ns; i++)
                     namespaces.Add(new NamespaceEntry(file, reader));
 
@@ -676,7 +675,7 @@ namespace Mono.CompilerServices.SymbolWriter
             {
                 ReadData();
                 if (include_files == null)
-                    return Array.Empty<SourceFileEntry>();
+                    return [];
 
                 SourceFileEntry[] retval = new SourceFileEntry[include_files.Count];
                 include_files.CopyTo(retval, 0);
@@ -740,8 +739,7 @@ namespace Mono.CompilerServices.SymbolWriter
             DataOffset = (int)bw.BaseStream.Position;
             bw.Write(file_name);
 
-            if (guid == null)
-                guid = new byte[16];
+            guid ??= new byte[16];
 
             if (hash == null)
             {
@@ -1071,7 +1069,7 @@ namespace Mono.CompilerServices.SymbolWriter
                 }
             }
 
-            _line_numbers = lines.ToArray();
+            _line_numbers = [.. lines];
 
             if (includesColumns)
             {
@@ -1488,7 +1486,7 @@ namespace Mono.CompilerServices.SymbolWriter
         }
     }
 
-    public struct NamespaceEntry
+    public readonly struct NamespaceEntry
     {
         #region This is actually written to the symbol file
         public readonly string Name;
@@ -1502,7 +1500,7 @@ namespace Mono.CompilerServices.SymbolWriter
             this.Name = name;
             this.Index = index;
             this.Parent = parent;
-            this.UsingClauses = using_clauses ?? (Array.Empty<string>());
+            this.UsingClauses = using_clauses ?? ([]);
         }
 
         internal NamespaceEntry(MonoSymbolFile file, MyBinaryReader reader)
@@ -1517,7 +1515,7 @@ namespace Mono.CompilerServices.SymbolWriter
                 UsingClauses[i] = reader.ReadString();
         }
 
-        internal void Write(MonoSymbolFile file, MyBinaryWriter bw)
+        internal readonly void Write(MonoSymbolFile file, MyBinaryWriter bw)
         {
             bw.Write(Name);
             bw.WriteLeb128(Index);
@@ -1527,7 +1525,7 @@ namespace Mono.CompilerServices.SymbolWriter
                 bw.Write(uc);
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return String.Format("[Namespace {0}:{1}:{2}]", Name, Index, Parent);
         }
