@@ -336,7 +336,7 @@ namespace Mono.CompilerServices.SymbolWriter
         Dictionary<int, MethodEntry> method_token_hash;
         Dictionary<string, int> source_name_hash;
 
-        Guid guid;
+        readonly Guid guid;
 
         MonoSymbolFile(Stream stream)
         {

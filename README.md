@@ -1,6 +1,6 @@
 # BigCow.Mobius.ILasm
 
-This repo is a fork of [Mobius.ILasm](https://github.com/kkokosa/Mobius.ILasm). It's been reconfigured to be a `net5.0` package that builds without warnings. For background and usage, please keep reading.
+This repo is a fork of [Mobius.ILasm](https://github.com/kkokosa/Mobius.ILasm). It's been reconfigured to be a `net8.0` package that builds without warnings. For background and usage, please keep reading.
 
 ![Build and test](https://github.com/stephen-riley/Mobius.ILasm/workflows/Build/badge.svg)
 [![NuGet](https://img.shields.io/nuget/v/Mobius.ILasm)](https://www.nuget.org/packages/BigCow.Mobius.ILasm)

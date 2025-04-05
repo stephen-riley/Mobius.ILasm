@@ -2933,7 +2933,7 @@ namespace PEAPI
     public class Module : ResolutionScope, IExternRef
     {
 
-        Guid mvid;
+        readonly Guid mvid;
         readonly uint mvidIx = 0;
 
         internal Module(string name, MetaData md) : base(name, md)

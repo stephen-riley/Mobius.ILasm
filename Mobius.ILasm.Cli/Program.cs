@@ -30,7 +30,7 @@ namespace Mobius.ILasm
 
                 //var assemblyContext = new AssemblyLoadContext(null);
                 //var assembly = assemblyContext.LoadFromStream(memoryStream);
-                //var assembly = assemblyContext.LoadFromAssemblyPath(@"d:\github\vms\Mobius.ILasm\Mobius.ILasm.Core.Runner\bin\x64\Debug\net5.0\" + outputFilename);
+                //var assembly = assemblyContext.LoadFromAssemblyPath(@"d:\github\vms\Mobius.ILasm\Mobius.ILasm.Core.Runner\bin\x64\Debug\net8.0\" + outputFilename);
             }
             catch (ArgException ex)
             {

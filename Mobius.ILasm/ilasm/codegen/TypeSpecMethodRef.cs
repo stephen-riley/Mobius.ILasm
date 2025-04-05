@@ -16,7 +16,9 @@ namespace Mono.ILASM
 {
     public class TypeSpecMethodRef : BaseMethodRef
     {
+#pragma warning disable SYSLIB0050
         readonly private static ObjectIDGenerator idGen = new ObjectIDGenerator();
+#pragma warning restore SYSLIB0050
 
         public TypeSpecMethodRef(BaseTypeRef owner,
                         PEAPI.CallConv call_conv, BaseTypeRef ret_type,
