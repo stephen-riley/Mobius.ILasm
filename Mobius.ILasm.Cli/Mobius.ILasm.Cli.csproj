@@ -3,9 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
     <AssemblyName>Mobius.ILasm.Cli</AssemblyName>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>ilasm</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
 
     <!-- workaround to make IDE0005 show up on build; see https://github.com/dotnet/roslyn/issues/41640 -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
